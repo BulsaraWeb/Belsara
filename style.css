@@ -1,0 +1,51 @@
+
+
+body {
+	margin:0px 0px; padding:0px;
+	text-align:center;
+	}
+	
+#container {
+	width:100%;
+	height:100%;
+	margin:0px auto;
+	top:0px;
+	left:0px;
+	text-align:left;
+	
+	background-color:white;
+	}
+	
+
+#menu_header
+	{
+	 top:0px;
+	 position: fixed; 
+	 background-color:#b0c4de;
+	 height:100px; 
+	 width:100%;
+	 left:0px;	
+	}
+	
+#gallery
+	{
+	 position:fixed;
+	 
+	 background-image: url('sfondo.pn');
+	 margin-top:100px;
+	 height:500px; 
+	 width:100%;	
+	 overflow: hidden;
+	}
+	
+.thumbVetrina
+	{
+	 
+	 float: left; 
+	 height:250px;
+	 width:25%; 	
+	 overflow: hidden;
+	
+	 margin: 0;
+	 padding: 0;
+	}
