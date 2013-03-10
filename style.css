@@ -33,19 +33,28 @@ body {
 	 
 	 
 	 margin-top:100px;
-	 height:500px; 
+	 height:400px; 
 	 width:100%;	
 	 overflow: hidden;
 	}
 	
 .thumbVetrina
 	{
-	 
 	 float: left; 
-	 height:250px;
+	 height:200px;
 	 width:25%; 	
 	 overflow: hidden;
 	
 	 margin: 0;
 	 padding: 0;
 	}
+	
+#div_stat
+	{
+	 font-size: 100%;
+	}
+	
+.stat
+    {
+     
+    }
