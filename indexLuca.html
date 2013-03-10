@@ -12,13 +12,14 @@
 $(document).ready(function() {
 
 					var scrWidth=$(document).width();
-					var scrHeight=$(document).height()/8;
+					var scrHeight=$(document).height();
 					var h=100;
 					var w=$(document).width()/4;
 					var top=-12;
 					var right=0;
 					var bottom=0;
 					var left=-12;
+					var winit,wend,tinit,tend,hinit,hend,linit,lend,binit,bend,rinit,rend;
 					
 					
 					function interpolate(index,frame,winit,hinit,tinit,rinit,binit,linit,
@@ -27,10 +28,10 @@ $(document).ready(function() {
 				             var alpha=(frame+1)/40.0;
 				             $("#vetrina"+index).width(winit + alpha*(wend-winit))
 				                          .height(hinit + alpha*(hinit-hend))
-				                          .css("margin-top",tinit+alpha*(tinit-tend))
-				     			          .css("margin-right",rinit+alpha*(rinit-rend))
+				                          .css("top",tinit+alpha*(tinit-tend))
+				     			          .css("right",rinit+alpha*(rinit-rend))
 				     			          .css("margin-bottom",binit+alpha*(binit-bend))
-				     			          .css("margin-left",binit+alpha*(linit-lend));
+				     			          .css("left",binit+alpha*(linit-lend));
 				     
 				     		if(frame<=40)
 				        	   setTimeout(function(){interpolate(index,frame+1,winit,hinit,tinit,rinit,binit,linit,
@@ -41,17 +42,17 @@ $(document).ready(function() {
 				      {
 				   	   winit=$("#vetrina"+i).width();
 					   hinit=$("#vetrina"+i).height();
-				       tinit=$("#vetrina"+i).css("margin-top");
-				       rinit=$("#vetrina"+i).css("margin-right");
-				       binit=$("#vetrina"+i).css("margin-bottom");
-				       linit=$("#vetrina"+i).css("margin-left");
+				       tinit=$("#vetrina"+i).css("top");
+				       rinit=$("#vetrina"+i).css("right");
+				       binit=$("#vetrina"+i).css("bottom");
+				       linit=$("#vetrina"+i).css("left");
 				    
 				       wend=$("#gallery").width();
 				   	   hend=$("#gallery").height();
-				       tend=$("#gallery").css("margin-top");
-				       rend=$("#gallery").css("margin-right");
-				       bend=$("#gallery").css("margin-bottom");
-				       lend=$("#gallery").css("margin-left");
+				       tend=$("#gallery").css("top");
+				       rend=$("#gallery").css("right");
+				       bend=$("#gallery").css("bottom");
+				       lend=$("#gallery").css("left");
 					   $("#vetrina"+i).click(function(){
 													    interpolate(i,0, winit,hinit,tinit,rinit,binit,linit,
 									                                     wend,hend,tend,rend,bend,lend);
@@ -64,25 +65,31 @@ $(document).ready(function() {
 					// --------------------------------------------------------------------------------
 					
 					var zommed=false;
-					var winit,wend,tinit,tend,hinit,hend,linit,lend,binit,bend,rinit,rend;
 					
-					$(".thumbVetrina").click(function(){
+		$(".thumbVetrina").click(function(){
 
-												var vetrina_corrente=$(this);
-												
-												$(".thumbVetrina ").each(function()
-												{
-												
-												//cancello tuttle le thumb tranne quella che ho cliccato
-												if($(this).attr("id")!=vetrina_corrente.attr("id"))
-												
-												$(this).css("display","none");
-																		
-												}).delay(100);
+									var vetrina_corrente=$(this);
+									var vetrina_corrente_l=$(this).position().left;
+									
+									var vetrina_corrente_r=$(this).position().right;
+									
+									var vetrina_corrente_t=$(this).position().top;
+									
+									
 
 					if(!zommed)
 					{
-						vetrina_corrente.animate({'height':scrHeight,'width':scrWidth,},200,'swing',
+						$(".thumbVetrina ").each(function()
+									{
+									
+									//cancello tuttle le thumb tranne quella che ho cliccato
+									if($(this).attr("id")!=vetrina_corrente.attr("id"))
+									
+									$(this).animate({"display":"none"});
+															
+									});
+						
+						vetrina_corrente.animate({'height':scrHeight/8,'width':scrWidth,'top':vetrina_corrente_t,'right':vetrina_corrente_r,'left':vetrina_corrente_l},200,'swing',
 						function(){
 									//cancella le thumb
 									$(".thumbVetrina ").each(function(){
@@ -100,7 +107,7 @@ $(document).ready(function() {
 					else // se l'immagine è ingrandita
 					{
 					//rimpicciolisco l'immagine
-					vetrina_corrente.animate({'width':scrWidth/4,'height':250,},300,'swing',
+					vetrina_corrente.animate({'width':scrWidth/4,'height':250},200,'swing',
 					function(){
 					//
 								$(".thumbVetrina ").each(function(){$(this).css("display","inline");});
@@ -114,58 +121,23 @@ $(document).ready(function() {
 					
 					
 				});//click vetrina any
-					var size;
+					
+					
+					
+					
 					var startingHeight=$("#gallery").height();
 					var lastScrollTop = 0;
-					$("#log").innerHTML=""+(startingHeight-$(document).scrollTop());
 					
 					
-					var pos_stat=$("#gallery").position().top+100;
-					var end=$('#end').position().top;
-							var size=10;				
+								
 					$(window).on("scroll", function(){//sto scrollando la finestra
 											
 														//$("#log").innerHTML=""+(startingHeight-$(document).scrollTop());
 														$("#gallery").css("height",startingHeight-$(window).scrollTop());
 														
-														//funzione che anima i le percentuali
 														
-														
-														
-																   var st = $(this).scrollTop();
-																   
-																   
-																   if (st > lastScrollTop)//scroll down
-																   	{
-																   		if(($(window).scrollTop()>=pos_stat)&&($(window).scrollTop()<end+300))
-											  						   	  
-											  						   	  $("#first_stat").animate({'font-size':80},100);
-																    } 
-																   else // scroll up
-																    {
-																       	 if(($(window).scrollTop()>=pos_stat)&&($(window).scrollTop()<end+100))
-											  						   
-											  						       $("#first_stat").animate({'font-size':10},100);
-																    }
-																   lastScrollTop = st;
-														
-												    
-												    
 												    });// on scroll
-													
-													
-											
-										var scroll_ok = true;
-										setInterval(function (){scroll_ok = true;}, 33);//33ms is 30fps, you can try changing this to something larger for better performance
-										$(window).bind('scroll', function () 
-										{
-										    if (scroll_ok === true) {
-										        scroll_ok = false;
-										        //now run your code to animate with respect to scroll
-										    }
-										});
-										
-										
+				
 															
 								});//document.ready
 					
@@ -192,40 +164,9 @@ $(document).ready(function() {
 				<p id="right"></p>
 				<p id="top"></p>
 			</div>
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-
-			<br>
-			<br>
-			<div id="div_stat" align="center">
-				<div id="first_stat">
-					<label id="label_first_stat">66% dice che si nota perche' e' unica </label>
-				</div>
-				<br>
-				<br>
-				<div id="end"></div>
-				<br>
-				<div id="second_stat">
-					<label>65%</label>
-				</div>
-				<br>
-				<br>
-				<div id="third_stat">
-					<label>8.5%</label>
-				</div>
-				<br>
-				<br>
-				<div id="fourth_stat">
-					<label>1%</label>
-				</div>
-				<br>
-				<br>
-				<div id="fifth_stat">
-					<label>70%</label>
-				</div>
-
-			</div>
-			<br>
-
+		<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+		<img width="1280px" src="chisiamo.png" />
+				
 		</div>
 	</body>
 </html>
