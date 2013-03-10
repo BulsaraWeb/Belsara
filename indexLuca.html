@@ -26,7 +26,7 @@ $(document).ready(function() {
 				            {
 				             var alpha=(frame+1)/40.0;
 				             $("#vetrina"+index).width(winit + alpha*(wend-winit))
-				                          .height(hinit + alpha*(hend-hend))
+				                          .height(hinit + alpha*(hinit-hend))
 				                          .css("margin-top",tinit+alpha*(tinit-tend))
 				     			          .css("margin-right",rinit+alpha*(rinit-rend))
 				     			          .css("margin-bottom",binit+alpha*(binit-bend))
