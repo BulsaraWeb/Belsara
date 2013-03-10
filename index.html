@@ -1,4 +1,4 @@
-<!--;DOCTYPE; HTML>-->
+
 <html> 
 	<head>
 		<title>Bulsara</title>
@@ -19,7 +19,7 @@ $(document).ready(function() {
 					var right=0;
 					var bottom=0;
 					var left=-12;
-					
+					/*
 					
 					function interpolate(index,frame,winit,hinit,tinit,rinit,binit,linit,
 									   wend,hend,tend,rend,bend,lend)
@@ -58,7 +58,7 @@ $(document).ready(function() {
 												       });
 					
 				      }
-					
+					*/
 					// --------------------------------------------------------------------------------
 					// --------------------------------------------------------------------------------
 					// --------------------------------------------------------------------------------
@@ -113,24 +113,40 @@ $(document).ready(function() {
 					
 					
 					});//click vetrina any
-					var size;
-					var startingHeight=$("#gallery").height();
+					
+					
 					var lastScrollTop = 0;
-					$("#log").innerHTML=""+(startingHeight-$(document).scrollTop());
 					
+					var statTop=$("#gallery").position().top+$("#gallery").height()+$("#menu_header").height();
 					
-					var pos_stat=$("#gallery").position().top+100;
-					var end=$('#end').position().top;
-							var size=10;				
+					$("#div_stat").css("margin-top",statTop);
+							var size=10;	
+					// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------							
+										
+					var startingHeight=$("#gallery").height();
 					$(window).on("scroll", function(){//sto scrollando la finestra
 											
-														//$("#log").innerHTML=""+(startingHeight-$(document).scrollTop());
+														
 														$("#gallery").css("height",startingHeight-$(window).scrollTop());
+														statTop= $("#gallery").position().top + (startingHeight-$(window).scrollTop())  +$("#menu_header").height();
+														$("#div_stat").css("top",statTop);
 														
+														
+														$('.stat').each(function(index) 
+														                 {
+														                  var distance=Math.abs($(this).offset().top-($(window).scrollTop()+$(window).height()/2.0));
+														                  if(distance<$(window).height()/2.0)
+														                    {
+																		     var scale=50*(1.0 - distance / ($(window).height()/2.0) );
+																		     //$("#log").text(""+scale);
+																		     $(this).css('font-size',10+scale);
+																		    }
+														                 });
+														
+/*														
 														//funzione che anima i le percentuali
-														
-														
-														
 																   var st = $(this).scrollTop();
 																   
 																   
@@ -147,13 +163,13 @@ $(document).ready(function() {
 											  						       $("#first_stat").animate({'font-size':10},500);
 																    }
 																   lastScrollTop = st;
-														
+														*/
 												    
 												    
 												    });// on scroll
 													
 													
-											
+											/*
 										var scroll_ok = true;
 										setInterval(function (){scroll_ok = true;}, 33);//33ms is 30fps, you can try changing this to something larger for better performance
 										$(window).bind('scroll', function () 
@@ -163,6 +179,7 @@ $(document).ready(function() {
 										        //now run your code to animate with respect to scroll
 										    }
 										});
+										*/
 										
 										
 															
@@ -176,7 +193,7 @@ $(document).ready(function() {
 		<div id="menu_header"><img id="header"  src="header.png"/>
 		</div>
 
-		<div id="container" style="height:4000px">
+		<div id="container">
 			<!--<div id="lente" style="width:200px;height:200px;background-color:#b0c4de;"></div>-->
 			<div id="gallery">
 				<img id="vetrina0" class="thumbVetrina" src="marvin1.jpg"/>
@@ -195,35 +212,27 @@ $(document).ready(function() {
 			<br>
 			<br>
 			<div id="div_stat" align="center">
-				<div id="first_stat">
-					<label id="label_first_stat">66% dice che si nota perche' e' unica </label>
+				<div class="stat">
+				 66% dice che si nota perche' e' unica
+				</div><br>
+				<div class="stat">
+				 al 90% ucciderò luca pappa
+				</div><br>
+				<div class="stat">
+				 al 99% proverò piacere nel farlo
+				</div><br>
+				<div class="stat">
+				 al 10% sta cosa andrà veloce
+				</div><br>
+				<div class="stat">
+				 al 99.9 periodico% non mi laureerò a maggio
 				</div>
-				<br>
-				<br>
-				<div id="end"></div>
-				<br>
-				<div id="second_stat">
-					<label>65%</label>
-				</div>
-				<br>
-				<br>
-				<div id="third_stat">
-					<label>8.5%</label>
-				</div>
-				<br>
-				<br>
-				<div id="fourth_stat">
-					<label>1%</label>
-				</div>
-				<br>
-				<br>
-				<div id="fifth_stat">
-					<label>70%</label>
-				</div>
+				
 
 			</div>
+			<p id="log"></p>
 			<br>
-
+			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>ciao
 		</div>
 	</body>
 </html>
