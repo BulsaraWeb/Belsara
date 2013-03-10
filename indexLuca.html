@@ -19,6 +19,50 @@ $(document).ready(function() {
 					var right=0;
 					var bottom=0;
 					var left=-12;
+					
+					
+					function interpolate(index,frame,winit,hinit,tinit,rinit,binit,linit,
+									   wend,hend,tend,rend,bend,lend)
+				            {
+				             var alpha=(frame+1)/40.0;
+				             $("#vetrina"+index).width(winit + alpha*(wend-winit))
+				                          .height(hinit + alpha*(hend-hend))
+				                          .css("margin-top",tinit+alpha*(tinit-tend))
+				     			          .css("margin-right",rinit+alpha*(rinit-rend))
+				     			          .css("margin-bottom",binit+alpha*(binit-bend))
+				     			          .css("margin-left",binit+alpha*(linit-lend));
+				     
+				     		if(frame<=40)
+				        	   setTimeout(function(){interpolate(index,frame+1,winit,hinit,tinit,rinit,binit,linit,
+									                              wend,hend,tend,rend,bend,lend);},5);
+				           }
+				
+				    for(var i=0; i<8; i+=1)
+				      {
+				   	   winit=$("#vetrina"+i).width();
+					   hinit=$("#vetrina"+i).height();
+				       tinit=$("#vetrina"+i).css("margin-top");
+				       rinit=$("#vetrina"+i).css("margin-right");
+				       binit=$("#vetrina"+i).css("margin-bottom");
+				       linit=$("#vetrina"+i).css("margin-left");
+				    
+				       wend=$("#gallery").width();
+				   	   hend=$("#gallery").height();
+				       tend=$("#gallery").css("margin-top");
+				       rend=$("#gallery").css("margin-right");
+				       bend=$("#gallery").css("margin-bottom");
+				       lend=$("#gallery").css("margin-left");
+					   $("#vetrina"+i).click(function(){
+													    interpolate(i,0, winit,hinit,tinit,rinit,binit,linit,
+									                                     wend,hend,tend,rend,bend,lend);
+												       });
+					
+				      }
+					
+					// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					// --------------------------------------------------------------------------------
+					
 					var zommed=false;
 					var winit,wend,tinit,tend,hinit,hend,linit,lend,binit,bend,rinit,rend;
 					
