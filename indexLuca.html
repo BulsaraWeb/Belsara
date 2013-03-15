@@ -1,172 +1,316 @@
-<!--;DOCTYPE; HTML>-->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
 		<title>Bulsara</title>
 		<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 		<link type="text/css" rel="stylesheet" href="style.css" />
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+		<script src="jquery-1.9.1.min.js"></script>
 
 		<script>
+			$(document).ready(function() {
 
-$(document).ready(function() {
+				//calcolo la larghezza dello schermo
+			 
+				var scrWidth = $(document).width();
+			
+				var scrHeight = $(document).height();
+				var w = $(document).width() / 4;
+				var top = -12;
+				var right = 0;
+				var bottom = 0;
+				var left = -12;
+				var winit, wend, tinit, tend, hinit, hend, linit, lend, binit, bend, rinit, rend;
+				var offset_header=100;
 
-					var scrWidth=$(document).width();
-					var scrHeight=$(document).height();
-					var h=100;
-					var w=$(document).width()/4;
-					var top=-12;
-					var right=0;
-					var bottom=0;
-					var left=-12;
-					var winit,wend,tinit,tend,hinit,hend,linit,lend,binit,bend,rinit,rend;
-					
-					
-					function interpolate(index,frame,winit,hinit,tinit,rinit,binit,linit,
-									   wend,hend,tend,rend,bend,lend)
-				            {
-				             var alpha=(frame+1)/40.0;
-				             $("#vetrina"+index).width(winit + alpha*(wend-winit))
-				                          .height(hinit + alpha*(hinit-hend))
-				                          .css("top",tinit+alpha*(tinit-tend))
-				     			          .css("right",rinit+alpha*(rinit-rend))
-				     			          .css("margin-bottom",binit+alpha*(binit-bend))
-				     			          .css("left",binit+alpha*(linit-lend));
-				     
-				     		if(frame<=40)
-				        	   setTimeout(function(){interpolate(index,frame+1,winit,hinit,tinit,rinit,binit,linit,
-									                              wend,hend,tend,rend,bend,lend);},5);
-				           }
+				  //
+			if(scrWidth>980)
+				{
+					//calcolo quanto spazio serve per centrare la schermata
+				var my_left=	(scrWidth-980)/2;
+				var my_right=   (scrWidth-980)/2;
+				$("#container").css("margin-left", my_left).css("margin-right", my_right);
 				
-				    for(var i=0; i<8; i+=1)
-				      {
-				   	   winit=$("#vetrina"+i).width();
-					   hinit=$("#vetrina"+i).height();
-				       tinit=$("#vetrina"+i).css("top");
-				       rinit=$("#vetrina"+i).css("right");
-				       binit=$("#vetrina"+i).css("bottom");
-				       linit=$("#vetrina"+i).css("left");
-				    
-				       wend=$("#gallery").width();
-				   	   hend=$("#gallery").height();
-				       tend=$("#gallery").css("top");
-				       rend=$("#gallery").css("right");
-				       bend=$("#gallery").css("bottom");
-				       lend=$("#gallery").css("left");
-					   $("#vetrina"+i).click(function(){
-													    interpolate(i,0, winit,hinit,tinit,rinit,binit,linit,
-									                                     wend,hend,tend,rend,bend,lend);
-												       });
-					
-				      }
-					
-					// --------------------------------------------------------------------------------
-					// --------------------------------------------------------------------------------
-					// --------------------------------------------------------------------------------
-					
-					var zommed=false;
-					
-		$(".thumbVetrina").click(function(){
+				}
+				
+				$("#who_we_are").click(function() {
+					$('html, body').animate({
+						scrollTop : $('#chi_siamo').position().top-offset_header
+					}, 700);
+				});
+				$("#services").click(function() {
+					$('html, body').animate({
+						scrollTop : $('#servizi').position().top-offset_header
+					}, 'slow');
+				});
+				$("#support").click(function() {
+					$('html, body').animate({
+						scrollTop : $('#supporto').position().top-offset_header
+					}, 'slow');
+				});
+				$("#partner").click(function() {
+					$('html, body').animate({
+						scrollTop : $('#compagni').position().top-offset_header
+					}, 'slow');
+				});
+				$("#join_us").click(function() {
+					$('html, body').animate({
+						scrollTop : $('#unisciti').position().top+offset_header
+					}, 'slow');
+				});
+				$("#home").click(function() {
+					$('html, body').scrollTo($('#container'),5000).delay(7000);
+				});
 
-									var vetrina_corrente=$(this);
-									var vetrina_corrente_l=$(this).position().left;
-									
-									var vetrina_corrente_r=$(this).position().right;
-									
-									var vetrina_corrente_t=$(this).position().top;
-									
-									
+			
+				var zommed = false;
+				var top;
+				var left;
+				var scrWidth=980;
+				
 
-					if(!zommed)
+				$(".thumbVetrina").click(function() {
+
+					var thumb;
+
+					if (!zommed) 
 					{
-						$(".thumbVetrina ").each(function()
-									{
+						var w = 245;
+						var h = 200;
+						thumb = $(this);
+						//immagine piccola
+
+						for (var i = 0; i < 8; i++)
+
+						//cancello tuttle le thumb tranne la mia che ingrandirò
+
+							if ($("#vetrina" + i).attr("id") != thumb.attr("id"))
+
+								$("#vetrina" + i).fadeOut(10);
+							
+							else//se è la mia
+
+							{
+								//rimetto la thumb nella posizione originale
+								//adesso si trova al limite in alto a sinistra
+								// a causa del fadeOut che ha fatto perdere la posizione
+
+								$("#vetrina" + i).css("margin-left", thumb.position().left);
+								//
+								if (i > 3)//è in seconda fila quindi il top sara h
+							  		$("#vetrina" + i).css("margin-top", h);
+                           	
+								else   //è in prima fila top=0
+								$("#vetrina" + i).css("margin-top", 0);
 									
-									//cancello tuttle le thumb tranne quella che ho cliccato
-									if($(this).attr("id")!=vetrina_corrente.attr("id"))
-									
-									$(this).animate({"display":"none"});
-															
-									});
-						
-						vetrina_corrente.animate({'height':scrHeight/8,'width':scrWidth,'top':vetrina_corrente_t,'right':vetrina_corrente_r,'left':vetrina_corrente_l},200,'swing',
-						function(){
-									//cancella le thumb
-									$(".thumbVetrina ").each(function(){
-									if($(this).attr("id")!=vetrina_corrente.attr("id"))
-									$(this).css("display","none");
-								   });
-						
-								  }  //function
-												);//animate
-												
-						
-						zommed=true;
-					}
-					
-					else // se l'immagine è ingrandita
-					{
-					//rimpicciolisco l'immagine
-					vetrina_corrente.animate({'width':scrWidth/4,'height':250},200,'swing',
-					function(){
-					//
-								$(".thumbVetrina").each(function(){$(this).css("display","inline");});
-					
-							  }
-											);//animate
-					
-					zommed=false;
-					//
-					}// else
-					
-					
-				});//click vetrina any
-					
-					
-					
-					
-					var startingHeight=$("#gallery").height();
-					var lastScrollTop = 0;
-					
-					
+								//centro l'immagine    
+								$("#vetrina" + i).animate({"margin-left" :(scrWidth/2-(w/2))+"px"},100);	
 								
-					$(window).on("scroll", function(){//sto scrollando la finestra
-											
-														//$("#log").innerHTML=""+(startingHeight-$(document).scrollTop());
-														$("#gallery").css("height",startingHeight-$(window).scrollTop());
-														
-														
-												    });// on scroll
-				
-															
-								});//document.ready
+								
+								//ingrandisco l'immagine dal centro
+								$("#vetrina" + i).animate({
+									
+									'margin-left' : '0px',
+									
+									'margin-top' : '0px',
+									
+									'width' : 980,
+									
+									'height' : 500
+														},
+									 200);
+								//
+							}
+
+						zommed = true;
+					} else// se l'immagine è ingrandita
+					{
+
+						//rimpicciolisco l'immagine
+
+						var w = 245;
+						var h = 200;
+						var big_image = $(this);
+						//scorro le immagini
+						for (var i = 7; i >= 0; i--) 
+						{
+							if ($("#vetrina" + i).attr("id") == big_image.attr("id"))//se e' la mia
+								if (i < 4)//prima fila
+								{
+									//rimpicciolisco nel suo punto originale
+									$("#vetrina" + i).animate({
+										"width" : w,
+										
+										"height" : h,
+										
+										"margin-left" : w * (i % 4) + "px",
+										
+										"margin-top" : 0
+										
+																},
+																 
+									     50,
+									     "linear", 
+									     function() 
+									     {
+		
+												$("#vetrina" + i).css("margin-top", 0);
+												$("#vetrina" + i).css("margin-left", 0);
+		
+												for (var i = 8; i >= 0; i--)
+													$("#vetrina" + i).fadeIn(200);
+										}
+										);//animate
+
+								}//fila 1 
+								
+								
+								else//seconda fila
+								
+								{
+
+									$("#vetrina" + i).animate({
+										"width" : w,
+										
+										"height" : h,
+										
+										"margin-left" : w * (i % 4) + "px",
+										
+										"margin-top" : 250
+										
+														}, 
+										50, 
+										"linear", 
+										function() 
+										{
+
+												$("#vetrina" + i).css("margin-top", "0px");
+												$("#vetrina" + i).css("margin-left", "0px");
+		
+												for (var i = 7; i >= 0; i--)
+													$("#vetrina" + i).fadeIn(200);
+										}
+										);//animate
+								}//fila 2
+
+						}//for
+
+						zommed = false;
+						
+						//rimetto a posto i margini
+						$(".thumbVetrina").animate({"margin-top" : "0px"}, 1);
+					    $(".thumbVetrina").animate({"margin-left" : "0px"}, 1).fadeOut("fast").fadeIn("fast");
+						//
+					}// else
+
 					
+
+				});
+				//click vetrina any
+
+				var startingHeight = $("#gallery").height();
+				var lastScrollTop = 0;
+
+				$(window).on("scroll", function() {//sto scrollando la finestra
+					//if((startingHeight-$(window).scrollTop())>-10)
+					//if("#gallery").css("height")>=0)
+					$("#gallery").css("height", startingHeight - $(window).scrollTop()-offset_header);
+
+				});
+				// on scroll
+
+			});
+			//document.ready
 
 		</script>
 	</head>
 	<body>
 
-		<div id="menu_header"><img id="header"  src="header.png"/>
-		</div>
+		<div id="menu_header" align="center">
+			<a id="casa" href="#"> Home</a><a id="who_we_are" href="#"> Chi Siamo</a><a id="services" href="#"> Servizi</a><a href="#" id="support"> Supporti</a><a href="#" id="partner"> Partner</a><a href="#" id="join_us"> Join us</a><a href="#" id="contact"> Contact</a>
 
-		<div id="container" style="height:4000px">
+		</div>
+		<div id="container"   style=" text-align:center" >
 			<!--<div id="lente" style="width:200px;height:200px;background-color:#b0c4de;"></div>-->
 			<div id="gallery">
-				<img id="vetrina0" class="thumbVetrina" src="marvin1.jpg"/>
-				<img id="vetrina1" class="thumbVetrina" src="marvin2.jpg"/>
-				<img id="vetrina2" class="thumbVetrina" src="marvin3.jpg"/>
-				<img id="vetrina3" class="thumbVetrina" src="marvin4.jpg"/>
-				<img id="vetrina4" class="thumbVetrina" src="MarvinMartian.jpg"/>
-				<img id="vetrina5" class="thumbVetrina" src="marvin5.jpg"/>
-				<img id="vetrina6" class="thumbVetrina" src="MarvinMartian.jpg"/>
-				<img id="vetrina7" class="thumbVetrina" src="MarvinMartian.jpg"/>
-				<p id="left"></p>
-				<p id="right"></p>
-				<p id="top"></p>
+				<div id="div_vetrina0"><img id="vetrina0" class="thumbVetrina" src="marvin0.jpg"/>
+				</div>
+				<div id="div_vetrina1"><img id="vetrina1" class="thumbVetrina" src="marvin2.jpg"/>
+				</div>
+				<div id="div_vetrina2"><img id="vetrina2" class="thumbVetrina" src="marvin3.jpg"/>
+				</div>
+				<div id="div_vetrina3"><img id="vetrina3" class="thumbVetrina" src="marvin4.jpg"/>
+				</div>
+				<div id="div_vetrina4"><img id="vetrina4" class="thumbVetrina" src="marvin1.jpg"/>
+				</div>
+				<div id="div_vetrina5"><img id="vetrina5" class="thumbVetrina" src="marvin5.jpg"/>
+				</div>
+				<div id="div_vetrina6"><img id="vetrina6" class="thumbVetrina" src="Marvin6.jpg"/>
+				</div>
+				<div id="div_vetrina7"><img id="vetrina7" class="thumbVetrina" src="marvin7.jpg"/>
+				</div>
+
 			</div>
-		<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-		<img width="1280px" src="chisiamo.png" />
+			
+			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+			<div id="chi_siamo">
+				<h2 align="center">CHI SIAMO</h2>
+				<p align="center" style="background-color:#C0C0C0;font-family:'Imprint MT Shadow'; font-size:33px">
+					Bulsara, dal termine inglese bull s eye, il centro del bersaglio, <br>
+					e una concessionaria Italia nel settore del Toilet Advertising,  <br>
+					la promozione pubblicitaria all interno dei servizi igienici.     <br>
+				</p>
 				
+			</div>
+			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+			
+
 		</div>
 	</body>
+	<script>
+			/*
+				function interpolate(index,frame,winit,hinit,tinit,rinit,binit,linit,
+				wend,hend,tend,rend,bend,lend)
+				{
+				var alpha=(frame+1)/40.0;
+				$("#vetrina"+index).width(winit + alpha*(wend-winit))
+				.height(hinit + alpha*(hinit-hend))
+				.css("top",tinit+alpha*(tinit-tend))
+				.css("right",rinit+alpha*(rinit-rend))
+				.css("margin-bottom",binit+alpha*(binit-bend))
+				.css("left",binit+alpha*(linit-lend));
+
+				if(frame<=40)
+				setTimeout(function(){interpolate(index,frame+1,winit,hinit,tinit,rinit,binit,linit,
+				wend,hend,tend,rend,bend,lend);},5);
+				}
+
+				for(var i=0; i<8; i+=1)
+				{
+				winit=$("#vetrina"+i).width();
+				hinit=$("#vetrina"+i).height();
+				tinit=$("#vetrina"+i).css("top");
+				rinit=$("#vetrina"+i).css("right");
+				binit=$("#vetrina"+i).css("bottom");
+				linit=$("#vetrina"+i).css("left");
+
+				wend=$("#gallery").width();
+				hend=$("#gallery").height();
+				tend=$("#gallery").css("top");
+				rend=$("#gallery").css("right");
+				bend=$("#gallery").css("bottom");
+				lend=$("#gallery").css("left");
+				$("#vetrina"+i).click(function(){
+				interpolate(i,0, winit,hinit,tinit,rinit,binit,linit,
+				wend,hend,tend,rend,bend,lend);
+				});
+
+				}
+				*/
+				// --------------------------------------------------------------------------------
+				// --------------------------------------------------------------------------------
+				// --------------------------------------------------------------------------------
+
+	</script>
 </html>
