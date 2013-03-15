@@ -19,6 +19,12 @@ $(document).ready(function() {
 					var right=0;
 					var bottom=0;
 					var left=-12;
+					
+					
+					var context = document.getElementById('myCanvas').getContext('2d');
+
+      			
+					
 					/*
 					
 					function interpolate(index,frame,winit,hinit,tinit,rinit,binit,linit,
@@ -127,7 +133,23 @@ $(document).ready(function() {
 										
 					var startingHeight=$("#gallery").height();
 					$(window).on("scroll", function(){//sto scrollando la finestra
-											
+														
+														for(var i=0; i<60; i++)
+														   {
+														   	context.beginPath();
+      														context.arc(10+i*20, 10, 5, 0, 2 * Math.PI, false);
+      														context.fillStyle = 'gray';
+														    context.fill();
+														   }
+														   
+														var prop=$(window).scrollTop()/$(window).height();
+														for(var i=0; i<prop*60; i++)
+														   {
+														   	context.beginPath();
+      														context.arc(10+i*20, 10, 5, 0, 2 * Math.PI, false);
+      														context.fillStyle = 'red';
+														    context.fill();
+														   }
 														
 														$("#gallery").css("height",startingHeight-$(window).scrollTop());
 														statTop= $("#gallery").position().top + (startingHeight-$(window).scrollTop())  +$("#menu_header").height();
@@ -189,8 +211,9 @@ $(document).ready(function() {
 		</script>
 	</head>
 	<body>
-
-		<div id="menu_header"><img id="header"  src="header.png"/>
+		<div id="menu_header">
+		<!--<img id="header"  src="header.png"/><br>--><br>
+			<canvas id="myCanvas" width="980" height="40"></canvas>
 		</div>
 
 		<div id="container">
