@@ -51,12 +51,18 @@ body {
 #div_stat
 	{
 	 font-size: 100%;
+	 background: #999; /* for non-css3 browsers */
+
+	 filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#B1BE84', endColorstr='#34B189'); /* for IE */
+	 background: -webkit-gradient(linear, left top, left bottom, from(#bb8), to(#3b9)); /* for webkit browsers */
+	 background: -moz-linear-gradient(top,  #bb8,  #3b9); /* for firefox 3.6+ */
 	}
 	
 .stat
     {
-     
+	 text-shadow: 0 0 5px rgba(0,0,0,0.5);     
     }
+
     .footer
     {
     	
