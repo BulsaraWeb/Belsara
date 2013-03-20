@@ -7,6 +7,7 @@
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 		<script src="pallini/pallini.js"></script>
+		<script src="statistiche/statistiche.js"></script>
 		<script>
 
 $(document).ready(function() {
@@ -22,21 +23,11 @@ $(document).ready(function() {
 					$(window).on("scroll", function(){
 														$("#gallery").css("height",startingHeight-$(window).scrollTop());
 														statTop= $("#gallery").position().top + (startingHeight-$(window).scrollTop())  +$("#menu_header").height();
-														$("#div_stat").css("top",statTop);
+														
+														$("#statistiche").css("top",statTop);
 														
 														
-														
-														$('.stat').each(function(index) 
-														                 {
-														                  var distance=Math.abs($(this).offset().top-($(window).scrollTop()+$(window).height()/2.0));
-														                  if(distance<$(window).height()/2.0)
-														                    {
-																		     var scale=50*(1.0 - distance / ( $(window).height()/2.0) );
-																		     $("#log").text(""+distance+" = "+$(window).height());
-																		     $(this).css('font-size',10+scale);
-																		     //$(this).css()
-																		    }
-														                 });
+
 														
 												        });// on scroll
 													
@@ -62,8 +53,10 @@ $(document).ready(function() {
 	</head>
 	<body>
 		<div id="menu_header">
-		<!--<img id="header"  src="header.png"/><br>--><br>
+		  <br>
+		    <!-- copia/incolla insieme allo script pallini -->
 			<div id="pallini" width="980" height="40"></div>
+			<!---->
 			<p id="log"></p>
 		</div>
 
@@ -75,8 +68,9 @@ $(document).ready(function() {
 			<br>
 			<br>
 			<br><br><br><br><br><br><br><br><br><br><br><br><br>
+			<!-- copia/incolla insieme allo script statistiche -->
 			<div align="center">
-			<div id="div_stat" align="center">
+			   <div id="statistiche" align="center">
 				<div class="stat">
 				 66% dice che si nota perche' e' unica
 				</div><br>
@@ -92,8 +86,9 @@ $(document).ready(function() {
 				<div class="stat">
 				 al 99.9 periodico% non mi laureerò a maggio
 				</div>
+			   </div>
 			</div>
-			</div>
+			<!---->
 			<br><br><br><br><br><br><br><br><br><br><br><br><br>
 			
 			<br>
