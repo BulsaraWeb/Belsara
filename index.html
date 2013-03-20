@@ -21,8 +21,8 @@ $(document).ready(function() {
 					var left=-12;
 					
 					
-					var context = document.getElementById('myCanvas').getContext('2d');
-
+					var canvas = document.getElementById("myCanvas");
+					var context = canvas.getContext('2d');
       			
 					
 					/*
@@ -134,6 +134,7 @@ $(document).ready(function() {
 					var startingHeight=$("#gallery").height();
 					$(window).on("scroll", function(){//sto scrollando la finestra
 														
+														context.clearRect(0, 0, canvas.width, canvas.height)
 														for(var i=0; i<60; i++)
 														   {
 														   	context.beginPath();
