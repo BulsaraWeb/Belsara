@@ -1,4 +1,4 @@
-
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html> 
 	<head>
 		<title>Bulsara</title>
@@ -6,155 +6,24 @@
 		<link type="text/css" rel="stylesheet" href="style.css" />
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
-
+		<script src="pallini/pallini.js"></script>
 		<script>
 
 $(document).ready(function() {
 
-					var scrWidth=$(document).width();
-					var scrHeight=$(document).height()/8;
-					var h=100;
-					var w=$(document).width()/4;
-					var top=-12;
-					var right=0;
-					var bottom=0;
-					var left=-12;
-					
-					
-					var canvas = document.getElementById("myCanvas");
-					var context = canvas.getContext('2d');
-      			
-					
-					/*
-					
-					function interpolate(index,frame,winit,hinit,tinit,rinit,binit,linit,
-									   wend,hend,tend,rend,bend,lend)
-				            {
-				             var alpha=(frame+1)/40.0;
-				             $("#vetrina"+index).width(winit + alpha*(wend-winit))
-				                          .height(hinit + alpha*(hend-hend))
-				                          .css("margin-top",tinit+alpha*(tinit-tend))
-				     			          .css("margin-right",rinit+alpha*(rinit-rend))
-				     			          .css("margin-bottom",binit+alpha*(binit-bend))
-				     			          .css("margin-left",binit+alpha*(linit-lend));
-				     
-				     		if(frame<=40)
-				        	   setTimeout(function(){interpolate(index,frame+1,winit,hinit,tinit,rinit,binit,linit,
-									                              wend,hend,tend,rend,bend,lend);},5);
-				           }
-				
-				    for(var i=0; i<8; i+=1)
-				      {
-				   	   winit=$("#vetrina"+i).width();
-					   hinit=$("#vetrina"+i).height();
-				       tinit=$("#vetrina"+i).css("margin-top");
-				       rinit=$("#vetrina"+i).css("margin-right");
-				       binit=$("#vetrina"+i).css("margin-bottom");
-				       linit=$("#vetrina"+i).css("margin-left");
-				    
-				       wend=$("#gallery").width();
-				   	   hend=$("#gallery").height();
-				       tend=$("#gallery").css("margin-top");
-				       rend=$("#gallery").css("margin-right");
-				       bend=$("#gallery").css("margin-bottom");
-				       lend=$("#gallery").css("margin-left");
-					   $("#vetrina"+i).click(function(){
-													    interpolate(i,0, winit,hinit,tinit,rinit,binit,linit,
-									                                     wend,hend,tend,rend,bend,lend);
-												       });
-					
-				      }
-					*/
-					// --------------------------------------------------------------------------------
-					// --------------------------------------------------------------------------------
-					// --------------------------------------------------------------------------------
-					
-					var zommed=false;
-					var winit,wend,tinit,tend,hinit,hend,linit,lend,binit,bend,rinit,rend;
-					
-					$(".thumbVetrina").click(function(){
 
-												var vetrina_corrente=$(this);
-												
-												$(".thumbVetrina ").each(function(){
-												
-												//cancello tuttle le thumb tranne quella che ho cliccato
-												if($(this).attr("id")!=vetrina_corrente.attr("id"))
-												
-												$(this).css("display","none");
-												
-												}).delay(100);
-
-					if(!zommed)
-					{
-						vetrina_corrente.animate({'height':scrHeight,'width':scrWidth,},200,'swing',
-						function(){
-									//cancella le thumb
-									$(".thumbVetrina ").each(function(){
-									if($(this).attr("id")!=vetrina_corrente.attr("id"))
-									$(this).css("display","none");
-								   });
-						
-								  }  //function
-												);//animate
-												
-						
-						zommed=true;
-					}
-					
-					else // se l'immagine è ingrandita
-					{
-					//rimpicciolisco l'immagine
-					vetrina_corrente.animate({'width':scrWidth/4,'height':250,},300,'swing',
-					function(){
-					//
-								$(".thumbVetrina ").each(function(){$(this).css("display","inline");});
-					
-							  }
-											);//animate
-					
-					zommed=false;
-					//
-					}// else
 					
 					
-					});//click vetrina any
-					
-					
-					var lastScrollTop = 0;
-					
-					var statTop=$("#gallery").position().top+$("#gallery").height()+$("#menu_header").height();
-					
-					$("#div_stat").css("margin-top",statTop);
-							var size=10;	
 					// --------------------------------------------------------------------------------
 					// --------------------------------------------------------------------------------
 					// --------------------------------------------------------------------------------							
 										
 					var startingHeight=$("#gallery").height();
-					$(window).on("scroll", function(){//sto scrollando la finestra
-														
-														context.clearRect(0, 0, canvas.width, canvas.height)
-														for(var i=0; i<60; i++)
-														   {
-														   	context.beginPath();
-      														context.arc(10+i*20, 10, 5, 0, 2 * Math.PI, false);
-      														context.fillStyle = 'gray';
-														    context.fill();
-														   }
-														   
-														var prop=$(window).scrollTop()/$(window).height();
-														for(var i=0; i<prop*60; i++)
-														   {
-														   	context.beginPath();
-      														context.arc(10+i*20, 10, 5, 0, 2 * Math.PI, false);
-      														context.fillStyle = 'red';
-														    context.fill();
-														   }
-														
+					$(window).on("scroll", function(){
 														$("#gallery").css("height",startingHeight-$(window).scrollTop());
 														statTop= $("#gallery").position().top + (startingHeight-$(window).scrollTop())  +$("#menu_header").height();
 														$("#div_stat").css("top",statTop);
+														
 														
 														
 														$('.stat').each(function(index) 
@@ -169,28 +38,7 @@ $(document).ready(function() {
 																		    }
 														                 });
 														
-/*														
-														//funzione che anima i le percentuali
-																   var st = $(this).scrollTop();
-																   
-																   
-																   if (st > lastScrollTop)//scroll down
-																   	{
-																   		if(($(window).scrollTop()>=pos_stat)&&($(window).scrollTop()<end+300))
-											  						   	  
-											  						   	  $("#first_stat").animate({'font-size':80},500);
-																    } 
-																   else // scroll up
-																    {
-																       	 if(($(window).scrollTop()>=pos_stat)&&($(window).scrollTop()<end+100))
-											  						   
-											  						       $("#first_stat").animate({'font-size':10},500);
-																    }
-																   lastScrollTop = st;
-														*/
-												    
-												    
-												    });// on scroll
+												        });// on scroll
 													
 													
 											/*
@@ -215,27 +63,19 @@ $(document).ready(function() {
 	<body>
 		<div id="menu_header">
 		<!--<img id="header"  src="header.png"/><br>--><br>
-			<canvas id="myCanvas" width="980" height="40"></canvas>
+			<div id="pallini" width="980" height="40"></div>
+			<p id="log"></p>
 		</div>
 
 		<div id="container">
 			<!--<div id="lente" style="width:200px;height:200px;background-color:#b0c4de;"></div>-->
 			<div id="gallery">
-				<img id="vetrina0" class="thumbVetrina" src="marvin1.jpg"/>
-				<img id="vetrina1" class="thumbVetrina" src="marvin2.jpg"/>
-				<img id="vetrina2" class="thumbVetrina" src="marvin3.jpg"/>
-				<img id="vetrina3" class="thumbVetrina" src="marvin4.jpg"/>
-				<img id="vetrina4" class="thumbVetrina" src="MarvinMartian.jpg"/>
-				<img id="vetrina5" class="thumbVetrina" src="marvin5.jpg"/>
-				<img id="vetrina6" class="thumbVetrina" src="MarvinMartian.jpg"/>
-				<img id="vetrina7" class="thumbVetrina" src="MarvinMartian.jpg"/>
-				<p id="left"></p>
-				<p id="right"></p>
-				<p id="top"></p>
-
+				<br><br><br><br><br><br>
 			</div>
 			<br>
 			<br>
+			<br><br><br><br><br><br><br><br><br><br><br><br><br>
+			<div align="center">
 			<div id="div_stat" align="center">
 				<div class="stat">
 				 66% dice che si nota perche' e' unica
@@ -252,12 +92,11 @@ $(document).ready(function() {
 				<div class="stat">
 				 al 99.9 periodico% non mi laureerò a maggio
 				</div>
-				
-
 			</div>
-			<p id="log"></p>
+			</div>
+			<br><br><br><br><br><br><br><br><br><br><br><br><br>
+			
 			<br>
-			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>ciao
 		</div>
 	</body>
 </html>
