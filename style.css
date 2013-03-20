@@ -2,16 +2,12 @@
 
 body {
 	margin:0px 0px; padding:0px;
-	text-align:center;
+	
 	}
 	
 #container {
-	width:100%;
-	height:100%;
-	margin:0px auto;
-	top:0px;
-	left:0px;
-	text-align:left;
+	
+
 	
 	background-color:white;
 	}
@@ -20,30 +16,33 @@ body {
 #menu_header
 	{
 	 top:0px;
-	 position: fixed; 
+	 position: fixed;
+	 text-align:center;
 	 background-color:#b0c4de;
 	 height:100px; 
 	 width:100%;
 	 left:0px;	
-	}
+	
+     }
 	
 #gallery
 	{
 	 position:fixed;
 	 
-	 
 	 margin-top:100px;
 	 height:400px; 
-	 width:100%;	
-	 overflow: hidden;
+	 width:980px;	
+	overflow: hidden;
+	
 	}
 	
 .thumbVetrina
 	{
+	
 	 float: left; 
 	 height:200px;
-	 width:25%; 	
-	 overflow: hidden;
+	 width:245px; 	
+	 
 	
 	 margin: 0;
 	 padding: 0;
@@ -58,3 +57,18 @@ body {
     {
      
     }
+    .footer
+    {
+    	
+    	margin-top:200px;
+    	
+    }
+    .biglietto
+    {
+    	text-align:none;	
+    	
+    }
+    .ui-dialog-titlebar-close
+     {
+  		visibility: hidden;
+	 }

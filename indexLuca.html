@@ -7,10 +7,18 @@
 		<link type="text/css" rel="stylesheet" href="style.css" />
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		<script src="jquery-1.9.1.min.js"></script>
-
+			<script src="jquery.mousewheel.js"></script>
+		<script>		jQuery(function($) 
+								{
+								   
+								        
+							   });
+</script>
 		<script>
+		
 			$(document).ready(function() {
-
+						$("#biglietto").css("-webkit-transform", "rotate(-10deg)");
+													
 				//calcolo la larghezza dello schermo
 			 
 				var scrWidth = $(document).width();
@@ -23,6 +31,7 @@
 				var left = -12;
 				var winit, wend, tinit, tend, hinit, hend, linit, lend, binit, bend, rinit, rend;
 				var offset_header=100;
+				var context = document.getElementById('myCanvas').getContext('2d');
 
 				  //
 			if(scrWidth>980)
@@ -115,11 +124,11 @@
 									
 									'margin-top' : '0px',
 									
-									'width' : 980,
+									'width' : '980px',
 									
-									'height' : 500
+									'height' : '400px'
 														},
-									 200);
+									 400);
 								//
 							}
 
@@ -133,11 +142,13 @@
 						var h = 200;
 						var big_image = $(this);
 						//scorro le immagini
+						$j=0;
 						for (var i = 7; i >= 0; i--) 
 						{
 							if ($("#vetrina" + i).attr("id") == big_image.attr("id"))//se e' la mia
 								if (i < 4)//prima fila
 								{
+									j=i;
 									//rimpicciolisco nel suo punto originale
 									$("#vetrina" + i).animate({
 										"width" : w,
@@ -150,7 +161,7 @@
 										
 																},
 																 
-									     50,
+									     200,
 									     "linear", 
 									     function() 
 									     {
@@ -169,7 +180,7 @@
 								else//seconda fila
 								
 								{
-
+									j=i;
 									$("#vetrina" + i).animate({
 										"width" : w,
 										
@@ -180,7 +191,7 @@
 										"margin-top" : 250
 										
 														}, 
-										50, 
+										200, 
 										"linear", 
 										function() 
 										{
@@ -189,7 +200,7 @@
 												$("#vetrina" + i).css("margin-left", "0px");
 		
 												for (var i = 7; i >= 0; i--)
-													$("#vetrina" + i).fadeIn(200);
+													$("#vetrina" + i).fadeIn(50);
 										}
 										);//animate
 								}//fila 2
@@ -199,8 +210,8 @@
 						zommed = false;
 						
 						//rimetto a posto i margini
-						$(".thumbVetrina").animate({"margin-top" : "0px"}, 1);
-					    $(".thumbVetrina").animate({"margin-left" : "0px"}, 1).fadeOut("fast").fadeIn("fast");
+						$("#vetrina"+j).animate({"margin-top" : "0px"}, 1);
+					    $("#vetrina"+j).animate({"margin-left" : "0px"}, 1).fadeIn(200);
 						//
 					}// else
 
@@ -212,13 +223,83 @@
 				var startingHeight = $("#gallery").height();
 				var lastScrollTop = 0;
 
-				$(window).on("scroll", function() {//sto scrollando la finestra
-					//if((startingHeight-$(window).scrollTop())>-10)
-					//if("#gallery").css("height")>=0)
-					$("#gallery").css("height", startingHeight - $(window).scrollTop()-offset_header);
 
-				});
-				// on scroll
+						
+						 $('#container')
+								        .bind('mousewheel', 
+								         function(event, delta) 
+								            {
+								                var dir = delta > 0 ? 'Up' : 'Down',
+								                vel = Math.abs(delta);
+								                
+								             // return false;
+								            });
+				$(window).on("scroll", function() {//sto scrollando la finestra
+				
+
+														for(var i=0; i<60; i++)
+														   {
+														   	context.beginPath();
+      														context.arc(10+i*20, 10, 5, 0, 2 * Math.PI, false);
+      														context.fillStyle = 'gray';
+														    context.fill();
+														   }
+														   
+														var prop=$(window).scrollTop()/$(window).height();
+														for(var i=0; i<prop*60; i++)
+														   {
+														   	context.beginPath();
+      														context.arc(10+i*20, 10, 5, 0, 2 * Math.PI, false);
+      														context.fillStyle = 'red';
+														    context.fill();
+														   }
+														
+														$("#gallery").css("height",startingHeight-$(window).scrollTop());
+														statTop= $("#gallery").position().top + (startingHeight-$(window).scrollTop())  +$("#menu_header").height();
+														$("#div_stat").css("top",statTop);
+														
+														
+														$('.stat').each(function(index) 
+														                 {
+														                  var distance=Math.abs($(this).offset().top-($(window).scrollTop()+$(window).height()/2.0));
+														                  if(distance<$(window).height()/2.0)
+														                    {
+																		     var scale=50*(1.0 - distance / ($(window).height()/2.0) );
+																		     //$("#log").text(""+scale);
+																		     $(this).css('font-size',10+scale);
+																		    }
+														                 });
+													
+//------------------------------------------------ANIMAZIONE BIGLIETTO.--------------------------------
+																								
+													if($("#biglietto").position().top>=($(window).scrollTop()+100)&&$("#biglietto").position().top<=($(window).scrollTop()+400))
+														{ 
+															
+															$(".footer").animate({'margin-top':'-370px'},
+																			{
+																				duration:1000,
+																				
+																				complete: function(){
+																					 					
+																					 					$("#biglietto").css("-moz-transition-delay","0s, 0s, 0s");
+																									$("#biglietto").css("-webkit-transform", "rotate(5deg)");
+																									//$("#biglietto").css("transform", "rotateX(4.6deg)");
+															
+																									
+																									}
+																			}
+																				);
+															//$(".footer").animate({'margin-left':'100px'},400);
+															//$("#biglietto").hide("drop",{direction:"up"},200).show("drop",{direction:"up"},200);
+															
+															
+														}
+													
+													
+													
+																						
+													});
+													// on scroll
 
 			});
 			//document.ready
@@ -227,28 +308,28 @@
 	</head>
 	<body>
 
-		<div id="menu_header" align="center">
+		<div id="menu_header" >
 			<a id="casa" href="#"> Home</a><a id="who_we_are" href="#"> Chi Siamo</a><a id="services" href="#"> Servizi</a><a href="#" id="support"> Supporti</a><a href="#" id="partner"> Partner</a><a href="#" id="join_us"> Join us</a><a href="#" id="contact"> Contact</a>
-
+<br><canvas id="myCanvas" width="980" height="40"></canvas>
 		</div>
 		<div id="container"   style=" text-align:center" >
 			<!--<div id="lente" style="width:200px;height:200px;background-color:#b0c4de;"></div>-->
 			<div id="gallery">
-				<div id="div_vetrina0"><img id="vetrina0" class="thumbVetrina" src="marvin0.jpg"/>
+				<div id="div_vetrina0"><img id="vetrina0" class="thumbVetrina" src="gallery1.jpg"/>
 				</div>
-				<div id="div_vetrina1"><img id="vetrina1" class="thumbVetrina" src="marvin2.jpg"/>
+				<div id="div_vetrina1"><img id="vetrina1" class="thumbVetrina" src="gallery2.jpg"/>
 				</div>
-				<div id="div_vetrina2"><img id="vetrina2" class="thumbVetrina" src="marvin3.jpg"/>
+				<div id="div_vetrina2"><img id="vetrina2" class="thumbVetrina" src="gallery3.jpg"/>
 				</div>
-				<div id="div_vetrina3"><img id="vetrina3" class="thumbVetrina" src="marvin4.jpg"/>
+				<div id="div_vetrina3"><img id="vetrina3" class="thumbVetrina" src="gallery4.jpg"/>
 				</div>
-				<div id="div_vetrina4"><img id="vetrina4" class="thumbVetrina" src="marvin1.jpg"/>
+				<div id="div_vetrina4"><img id="vetrina4" class="thumbVetrina" src="gallery5.jpg"/>
 				</div>
-				<div id="div_vetrina5"><img id="vetrina5" class="thumbVetrina" src="marvin5.jpg"/>
+				<div id="div_vetrina5"><img id="vetrina5" class="thumbVetrina" src="gallery6.jpg"/>
 				</div>
-				<div id="div_vetrina6"><img id="vetrina6" class="thumbVetrina" src="Marvin6.jpg"/>
+				<div id="div_vetrina6"><img id="vetrina6" class="thumbVetrina" src="gallery7.jpg"/>
 				</div>
-				<div id="div_vetrina7"><img id="vetrina7" class="thumbVetrina" src="marvin7.jpg"/>
+				<div id="div_vetrina7"><img id="vetrina7" class="thumbVetrina" src="gallery8.jpg"/>
 				</div>
 
 			</div>
@@ -265,52 +346,17 @@
 			</div>
 			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 			
-
+          
 		</div>
+		 <div id="footer">
+           	<img id="biglietto" src="biglietto.png" class="biglietto"/>
+           	<img class="footer" src="footer.png" />
+           	
+           	
+           </div>
 	</body>
-	<script>
-			/*
-				function interpolate(index,frame,winit,hinit,tinit,rinit,binit,linit,
-				wend,hend,tend,rend,bend,lend)
-				{
-				var alpha=(frame+1)/40.0;
-				$("#vetrina"+index).width(winit + alpha*(wend-winit))
-				.height(hinit + alpha*(hinit-hend))
-				.css("top",tinit+alpha*(tinit-tend))
-				.css("right",rinit+alpha*(rinit-rend))
-				.css("margin-bottom",binit+alpha*(binit-bend))
-				.css("left",binit+alpha*(linit-lend));
-
-				if(frame<=40)
-				setTimeout(function(){interpolate(index,frame+1,winit,hinit,tinit,rinit,binit,linit,
-				wend,hend,tend,rend,bend,lend);},5);
-				}
-
-				for(var i=0; i<8; i+=1)
-				{
-				winit=$("#vetrina"+i).width();
-				hinit=$("#vetrina"+i).height();
-				tinit=$("#vetrina"+i).css("top");
-				rinit=$("#vetrina"+i).css("right");
-				binit=$("#vetrina"+i).css("bottom");
-				linit=$("#vetrina"+i).css("left");
-
-				wend=$("#gallery").width();
-				hend=$("#gallery").height();
-				tend=$("#gallery").css("top");
-				rend=$("#gallery").css("right");
-				bend=$("#gallery").css("bottom");
-				lend=$("#gallery").css("left");
-				$("#vetrina"+i).click(function(){
-				interpolate(i,0, winit,hinit,tinit,rinit,binit,linit,
-				wend,hend,tend,rend,bend,lend);
-				});
-
-				}
-				*/
-				// --------------------------------------------------------------------------------
-				// --------------------------------------------------------------------------------
-				// --------------------------------------------------------------------------------
-
-	</script>
+	<?php
+	session_start();
+	$_SESSION["user"]="anyone";
+	 ?>
 </html>
