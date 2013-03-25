@@ -19,9 +19,10 @@ body {
 	 position: fixed;
 	 text-align:center;
 	 background-color:#b0c4de;
-	 height:100px; 
+	 height:60px; 
 	 width:100%;
-	 left:0px;	
+	 left:0px;
+	 z-index: 19;	
 	
      }
 	
@@ -30,7 +31,7 @@ body {
 	 position:fixed;
 	 
 	 margin-top:100px;
-	 height:400px; 
+	 height:500px; 
 	 width:980px;	
 	overflow: hidden;
 	
@@ -66,6 +67,8 @@ body {
     .biglietto
     {
     	text-align:none;	
+    	z-index: -1;
+    	
     	
     }
     .ui-dialog-titlebar-close

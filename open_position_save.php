@@ -1,6 +1,7 @@
 <?php
- mysql_connect("62.149.150.181","Sql634189","7d4c6b35");
-			mysql_select_db("Sql634189_1");
+$conn= mysql_connect("62.149.150.181","Sql634189","7d4c6b35");
+
+			mysql_select_db("Sql634189_1",$conn);
 			// Check connessione
 			// if (mysql_connect_errno($con))
 			  // {
@@ -8,23 +9,15 @@
 			  // }
 			  
 					
-			 $result= mysql_query("UPDATE  BulsaraAdmin SET posizione_aperta =".$_POST["descrizione"]);
-			 $num=mysql_numrows($result);
+			     mysql_query("UPDATE  BulsaraAdmin SET posizione_aperta ='".$_POST["descrizione"]."'");
+			 
 
 					mysql_close();
-					
-					
-					$i=0;
-					while ($i < $num) 
-					{
-					
-							$field=mysql_result($result,$i,"posizione_aperta");
-							
-		
-							$i++;
-					}
-					
-				
-
+					session_start();
+					$_SESSION["position_open"]=$_POST["descrizione"];
+					file_put_contents("posizione_aperta.txt", $_SESSION['position_open']);
+					header("location:join_us.php?joined=true");
+					exit();
+	
 
 ?>

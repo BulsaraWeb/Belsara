@@ -39,19 +39,45 @@
 					}
 
 				
-				echo $input_password;
+				
 			   if ($input_password == $field) 
 			     {
-			     	session_start();
-			     	session_register("chief",$_SESSION["user"]);
-			
-			       if(session_start())
-				   $_SESSION['user']="chief"; 
-				    
-				   else echo $_SESSION['user'];
-				    header("location: http://www.bulsara.it/newSite/backend.php?id=".$param);
-				  }
-			   else  header("location:login.php?error=true");
+			     	
+					//$_SESSION["user"]="chief";
+			        session_start();
+			     	// session_register("chief",$_SESSION["user"]);
+					 mysql_connect("62.149.150.181","Sql634189","7d4c6b35");
+					 mysql_select_db("Sql634189_1");
+								
+			        $_SESSION["user"]="chief";
+					 $result= mysql_query("SELECT posizione_aperta FROM BulsaraAdmin ");
+					 $num=mysql_numrows($result);
+
+					mysql_close();
+					
+					
+					$i=0;
+					
+					while ($i < $num) 
+					{
+					
+							$field=mysql_result($result,$i,"posizione_aperta");
+							
+		
+							$i++;
+					}
+					
+					
+				    $_SESSION["position_open"]=$field;
+					 header("location: http://www.bulsara.it/newSite/backend.php");
+				     exit();
+				  
+				 }
+			   else 
+			   	{
+			   		 header("location:login.php?error=true");
+					 exit();
+				}
 			
 			
 				// mysql_close();	  

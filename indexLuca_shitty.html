@@ -1,0 +1,470 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>Bulsara</title>
+		<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+		<link type="text/css" rel="stylesheet" href="style.css" />
+		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script src="jquery-1.9.1.min.js"></script>
+			<script src="jquery.mousewheel.js"></script>
+		<script>		jQuery(function($) 
+								{
+								   
+								        
+							   });
+</script>
+		<script>
+		
+			$(document).ready(function() {
+						$("#biglietto").css("-webkit-transform", "rotate(-10deg)");
+													
+				//calcolo la larghezza dello schermo
+			 
+				var scrWidth = $(document).width();
+			
+				var scrHeight = $(document).height();
+				var w = $(document).width() / 4;
+				var top = -12;
+				var right = 0;
+				var bottom = 0;
+				var left = -12;
+				var winit, wend, tinit, tend, hinit, hend, linit, lend, binit, bend, rinit, rend;
+				var offset_header=100;
+				
+				var context = document.getElementById('myCanvas').getContext('2d');
+                  // context= G_vmlCanvasManager.initElement(context);
+				  //
+				  
+				  jQuery.get('posizione_aperta.txt',function(data)
+				  												{
+				  													$('#posizione_aperta').html('Posizione Aperta:'+data);
+				  													
+				  												});
+				  
+				  
+				  
+				  
+				  
+			if(scrWidth>980)
+				{
+					//calcolo quanto spazio serve per centrare la schermata
+				var my_left=	(scrWidth-980)/2;
+				var my_right=   (scrWidth-980)/2;
+				$("#container").css("margin-left", my_left).css("margin-right", my_right);
+				
+				}
+				
+				$("#who_we_are").click(function() {
+					$('html, body').animate({
+						scrollTop : $('#chi_siamo').position().top-offset_header
+					}, 700);
+				});
+				$("#services").click(function() {
+					$('html, body').animate({
+						scrollTop : $('#servizi').position().top-offset_header
+					}, 'slow');
+				});
+				$("#support").click(function() {
+					$('html, body').animate({
+						scrollTop : $('#supporto').position().top-offset_header
+					}, 'slow');
+				});
+				$("#partner").click(function() {
+					$('html, body').animate({
+						scrollTop : $('#compagni').position().top-offset_header
+					}, 'slow');
+				});
+				$("#join_us").click(function() {
+					$('html, body').animate({
+						scrollTop : $('#unisciti').position().top+offset_header
+					}, 'slow');
+				});
+				$("#home").click(function() {
+					$('html, body').scrollTo($('#container'),5000).delay(7000);
+				});
+
+			
+				var zommed = false;
+				var top;
+				var left;
+				var scrWidth=980;
+				
+
+				$(".thumbVetrina").click(function() {
+
+					var thumb;
+
+					if (!zommed) 
+					{
+						var w = 245;
+						var h = 200;
+						thumb = $(this);
+						//immagine piccola
+
+						for (var i = 0; i < 8; i++)
+							$("#vetrina" + i).fadeOut(500);
+						for (var i = 0; i < 8; i++)
+
+						//cancello tuttle le thumb tranne la mia che ingrandirò
+
+							if ($("#vetrina" + i).attr("id") != thumb.attr("id"))
+
+								;//$("#vetrina" + i).fadeOut(500);
+							
+							else//se è la mia
+
+							{
+								
+								//rimetto la thumb nella posizione originale
+								//adesso si trova al limite in alto a sinistra
+								// a causa del fadeOut che ha fatto perdere la posizione
+								
+								//$("#vetrina" + i).css("margin-left", thumb.position().left);
+								$("#vetrina" + i).fadeIn(500);
+								//
+								// if (i > 3)//è in seconda fila quindi il top sara h
+							  		// $("#vetrina" + i).css("margin-top", h);
+//                            	
+								// else   //è in prima fila top=0
+								// $("#vetrina" + i).css("margin-top", 0);
+// 									
+								//centro l'immagine    
+								//$("#vetrina" + i).animate({"margin-left" :(scrWidth/2-(w/2))+"px"},100);	
+								
+								
+								//ingrandisco l'immagine dal 
+								var marg=0;
+								if(i>3)
+								   marg=200;
+								$("#vetrina" + i).animate({
+									
+									'margin-left' : w * (i % 4) + "px",
+									
+									'margin-top' : marg,
+									
+									'width' : '980px',
+									
+									'height' : '500px'
+														},
+									 500);
+								//
+							}
+
+						zommed = true;
+					} 
+					
+					
+					else// se l'immagine è ingrandita
+					{
+
+						//rimpicciolisco l'immagine
+						
+						var w = 245;
+						var h = 200;
+						
+						var big_image = $(this);
+						var m=0;
+						if(i>3)
+						  m=200;
+						
+						for (var i = 7; i >= 0; i--) 
+							$("#vetrina" + i).fadeIn(50);
+						
+						   $(this).animate({
+																	"width" : w,
+																	
+																	"height" : h,
+																	
+																	"margin-left" : w * (i % 4) + "px",
+																	
+																	"margin-top" : m
+																	
+															   },
+											{
+											  duration: 1000,
+											  step:function(now,tween)
+											  				{
+											  					if(now>900)
+											  					{
+											  						$(this).animate({
+																						
+																						"margin-left" : "0px",
+																						
+																						"margin-top" : "0px"
+																					});
+																}
+															 },
+											  }
+											  	
+											);
+															   
+													
+								setTimeout(function()		
+														{
+															for (var i = 7; i >= 0; i--) 
+																$("#vetrina" + i).fadeIn(50);
+														}
+														,
+														1600);	
+							zommed = false;
+							}		
+						//scorro le immagini
+					//	$j=0;
+						// for (var i = 7; i >= 0; i--) 
+							// $("#vetrina" + i).fadeOut(1000);
+// 						
+						// $(this).fadeIn(1000);
+// 						
+						// for (var i = 7; i >= 0; i--) 
+						// {
+// 							
+							// if ($("#vetrina" + i).attr("id") == big_image.attr("id"))//se e' la mia
+							// {	// if (i < 4)//prima fila
+								// // {
+									// // j=i;
+									// //rimpicciolisco nel suo punto originale
+// 									
+									// $("#vetrina" + i).animate({
+																	// "width" : w,
+// 																	
+																	// "height" : h,
+// 																	
+																	// //"margin-left" : w * (i % 4) + "px",
+// 																	
+																	// "margin-top" : 0
+// 																	
+															   // });
+// 														
+// 							
+							// }						
+									
+// 																 
+// 									     
+									  // {
+									     	// duration:1000,
+									     	// step: 
+									     // function(now,tween) 
+									     	// {
+												// if(now>900)
+														// {
+															// $(this).css("margin-top", 0);
+														 	// $(this).css("margin-left", 0);
+// 														 	
+														// }
+											// },
+// 											
+											// complete:function(){
+// 																
+// 																
+																// }
+// 											
+									  // }                       
+// 									             
+									                         // );//animate
+// 								
+									// for (var i = 8; i >= 0; i--)
+										   // $("#vetrina" + i).fadeIn(1000);
+// 															
+								// }//fila 1 
+// 								
+// 								
+								// else//seconda fila
+// 								
+								// {
+									// j=i;
+									// $("#vetrina" + i).animate({
+										// "width" : w,
+// 										
+										// "height" : h,
+// 										
+										// "margin-left" : w * (i % 4) + "px",
+// 										
+										// "margin-top" : 250
+// 										
+														// }, 
+									    // {
+									     	// duration:1000,
+									     	// step: 
+									    		 // function() 
+									     		// {
+// 			
+													// $(this).css("margin-top", h);
+													// $(this).css("margin-left", 0);
+// 			
+												// },
+// 												
+											// complete:function(){
+																// for (var i = 8; i >= 0; i--)
+																	// $("#vetrina" + i).fadeIn(20);
+// 																
+																// }
+// 											
+									  // }                       
+									             
+									                       //  );//animate
+
+								//}//fila 2
+
+					//	}//for
+					
+						//zommed = false;
+						
+						//rimetto a posto i margini
+					//	$("#vetrina"+j).animate({"margin-top" : "0px"}, 1);
+					 //   $("#vetrina"+j).animate({"margin-left" : "0px"}, 1).fadeIn(200);
+						//
+					//}// else
+
+					
+
+				});
+				//click vetrina any
+
+				var startingHeight = $("#gallery").height();
+				var lastScrollTop = 0;
+
+
+						
+						 $('#container')
+								        .bind('mousewheel', 
+								         function(event, delta) 
+								            {
+								                var dir = delta > 0 ? 'Up' : 'Down',
+								                vel = Math.abs(delta);
+								                
+								             // return false;
+								            });
+				$(window).on("scroll", function() {//sto scrollando la finestra
+				
+
+														for(var i=0; i<60; i++)
+														   {
+														   	context.beginPath();
+      														context.arc(10+i*20, 10, 5, 0, 2 * Math.PI, false);
+      														context.fillStyle = 'gray';
+														    context.fill();
+														   }
+														   
+														var prop=$(window).scrollTop()/$(window).height();
+														for(var i=0; i<prop*60; i++)
+														   {
+														   	context.beginPath();
+      														context.arc(10+i*20, 10, 5, 0, 2 * Math.PI, false);
+      														context.fillStyle = 'red';
+														    context.fill();
+														   }
+														
+														$("#gallery").css("height",startingHeight-$(window).scrollTop());
+														statTop= $("#gallery").position().top + (startingHeight-$(window).scrollTop())  +$("#menu_header").height();
+														$("#div_stat").css("top",statTop);
+														
+														
+														$('.stat').each(function(index) 
+														                 {
+														                  var distance=Math.abs($(this).offset().top-($(window).scrollTop()+$(window).height()/2.0));
+														                  if(distance<$(window).height()/2.0)
+														                    {
+																		     var scale=50*(1.0 - distance / ($(window).height()/2.0) );
+																		     //$("#log").text(""+scale);
+																		     $(this).css('font-size',10+scale);
+																		    }
+														                 });
+													
+//------------------------------------------------ANIMAZIONE BIGLIETTO.--------------------------------
+																								
+													if($("#biglietto").position().top>=($(window).scrollTop()+100)&&$("#biglietto").position().top<=($(window).scrollTop()+800))
+														{ 
+															
+															$(".footer").animate({'margin-top':'-370px'},
+																			{
+																				duration:1000,
+																				
+																				complete: function(){
+																					 					
+																					 					//$("#biglietto").css("-moz-transition-delay","0s, 0s, 0s");
+																									$("#biglietto").css("-webkit-transform", "rotate(5deg)");
+																									$("#biglietto").css("-moz-transform", "rotate(5deg)");
+																									$("#biglietto").css("-o-transform", "rotate(5deg)");
+																									$("#biglietto").css("-ms-transform", "rotate(5deg)");
+																									$("#biglietto").css("transform", "rotate(5deg)");
+																									//$("#biglietto").css("transform", "rotateX(4.6deg)");
+															
+																									
+																									}
+																			}
+																				);
+															//$(".footer").animate({'margin-left':'100px'},400);
+															//$("#biglietto").hide("drop",{direction:"up"},200).show("drop",{direction:"up"},200);
+															
+															
+														}
+													
+													
+													
+																						
+													});
+													// on scroll
+
+			});
+			//document.ready
+
+		</script>
+	</head>
+	<body>
+
+		<div id="menu_header" >
+			<a id="casa" href="#"> Home</a><a id="who_we_are" href="#"> Chi Siamo</a><a id="services" href="#"> 
+			Servizi</a><a href="#" id="support"> Supporti</a><a href="#" id="partner"> Partner</a><a href="#" id="join_us">
+				 Join us</a><a href="#" id="contact"> Contact</a><a href="login.php"> Login</a>
+				<!--<?php if($_SESSION["user"]!="")echo "<a href='login.php'>Login</a>";?>-->
+				<br><canvas id="myCanvas" width="980" height="40"></canvas>
+		</div>
+		<div id="container"   style=" text-align:center" >
+			<!--<div id="lente" style="width:200px;height:200px;background-color:#b0c4de;"></div>-->
+			<div id="gallery">
+				<div id="div_vetrina0"><img id="vetrina0" class="thumbVetrina" src="gallery1.jpg"/>
+				</div>
+				<div id="div_vetrina1"><img id="vetrina1" class="thumbVetrina" src="gallery2.jpg"/>
+				</div>
+				<div id="div_vetrina2"><img id="vetrina2" class="thumbVetrina" src="gallery3.jpg"/>
+				</div>
+				<div id="div_vetrina3"><img id="vetrina3" class="thumbVetrina" src="gallery4.jpg"/>
+				</div>
+				<div id="div_vetrina4"><img id="vetrina4" class="thumbVetrina" src="gallery5.jpg"/>
+				</div>
+				<div id="div_vetrina5"><img id="vetrina5" class="thumbVetrina" src="gallery6.jpg"/>
+				</div>
+				<div id="div_vetrina6"><img id="vetrina6" class="thumbVetrina" src="gallery7.jpg"/>
+				</div>
+				<div id="div_vetrina7"><img id="vetrina7" class="thumbVetrina" src="gallery8.jpg"/>
+				</div>
+
+			</div>
+			
+			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+			<div id="chi_siamo">
+				<h2 align="center">CHI SIAMO</h2>
+				<p align="center" style="background-color:#C0C0C0;font-family:'Imprint MT Shadow'; font-size:33px">
+					Bulsara, dal termine inglese bull s eye, il centro del bersaglio, <br>
+					e una concessionaria Italia nel settore del Toilet Advertising,  <br>
+					la promozione pubblicitaria all interno dei servizi igienici.     <br>
+				</p>
+				
+			</div>
+			<br><br><br><br><br><br><br><br><br><br><br><br> 
+			 <div style="font-size: larger;" id="posizione_aperta"></div>
+			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+			
+       </div>
+		 <div id="footer">
+           	<img id="biglietto" src="biglietto.png" class="biglietto"/>
+           	<img class="footer" src="footer.png" />
+           	
+           	
+           </div>
+        
+	 
+	</body>
+	
+</html>

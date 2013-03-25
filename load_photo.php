@@ -1,5 +1,9 @@
 <?php
+
+include ('image.php');
 		$how_much=0;
+		$width=80;
+		$height=60;
 		for ( $i=1; $i<9; $i++)
 		{
 			
@@ -11,14 +15,37 @@
 			
 				
 			
-			if((strstr($_FILES['img'.$i]['name'],".jpg")))
+			if(strstr($_FILES['img'.$i]['name'],".jpg"))/*||strstr($_FILES['img'.$i]['name'],".JPG")||strstr($_FILES['img'.$i]['name'],".jpeg")||strstr($_FILES['img'.$i]['name'],".JPEG"))*/
 			{
 				//if(file_exists($_SERVER["DOCUMENT_ROOT"]."/newSite/gallery".$i.".jpg"))
 				
-				 unlink($_SERVER["DOCUMENT_ROOT"]."/newSite/gallery".$i.".jpg");
+				 if(unlink($_SERVER["DOCUMENT_ROOT"]."/newSite/gallery".$i.".jpg"));
+				 else header("location:backend.php?error=true");
 				if(move_uploaded_file($_FILES['img'.$i]['tmp_name'],$_SERVER["DOCUMENT_ROOT"]."/newSite/gallery".$i.".jpg"))
 					
 					{
+						$size = getimagesize($_SERVER["DOCUMENT_ROOT"]."/newSite/gallery".$i.".jpg");
+						if($size[0]>$width && $size[1]>$height)
+					      {
+					      	
+								$file=$_SERVER["DOCUMENT_ROOT"]."/newSite/gallery".$i.".jpg";
+					      		$save=$_SERVER["DOCUMENT_ROOT"]."/newSite/gallery".$i.".jpg";
+					      		
+					      		list($width, $height) = getimagesize($file) ;
+								
+								$modwidth = 980;
+								
+								$modheight = 600;
+								
+								$tn = imagecreatetruecolor($modwidth, $modheight) ;
+								
+								$image = imagecreatefromjpeg($file) ;
+								
+								imagecopyresampled($tn, $image, 0, 0, 0, 0, $modwidth, $modheight, $width, $height) ;
+								
+								imagejpeg($tn, $save, 100);
+
+						  }
 						//chmod($_SERVER["DOCUMENT_ROOT"]."/newSite/gallery".$i.".jpg", 0755);
 						$how_much++;
 						
@@ -54,7 +81,8 @@
 			
        
 		}
-		 header("location:backend.php?id=".hash("sha256","ok")."&num=".$how_much);
+		 header("location:backend.php?num=".$how_much);
 		 
-		
+	
+	
 ?>

@@ -9,14 +9,44 @@
 	</head>		
 			
 	<body>
+		<?php session_start(); 
+		if($_SESSION["user"]=="chief") //if($_GET["id"]== hash('sha256',"ok")){ $_SESSION["user"]="chief";
+   			{
+   				
+			?>
+	<div align="center">		
 		<form action="open_position_save.php" method="post" >
-			<div align="center" >
-					Descrizione posizione aperta <br>
-					<input type="text" name="descrizione" id="descrizione" style="width: 500px; height: 250px; font-size:large"  /> 		
-					<input type="submit" value="Cambia" />	
+			<br> <a href="">Gestione Partner</a> 
+			<br>
+			<a href="indexLuca.html"> Index</a>
+			<br>
+			<a href="backend.php">Gestione Galleria</a>
+			<br>
+			<br>
+			<div>
+					<p style="font-size: large; ">Descrizione posizione aperta</p> <br>
+					<textarea  name="descrizione" id="descrizione" col="20" row="20" style=" font-size:large"> </textarea>		
+					<input type="submit" value="Cambia" onclick="if($('#descrizione').replace(/ /g,'').val()=='') confirm( 'campo vuoto?' );" style="font-size: large; "/>	
 								
+								<?php
+								//phpinfo();
+								 
+								
+									//
+									
+								   if($_GET["joined"]=="true")
+								   	echo '<br>Posizione aperta modificata correttamente<br>';
+								   
+								   
+								   echo '<br><br><br>Posizione attuale :<br>'. $_SESSION["position_open"];
+								
+								?>
    			</div>		
 		</form>
-				
-  </body>		
+	</div>			
+  </body>
+  <?php }
+			
+								   else header("location:login.php") ?>		
+  </html>
 			

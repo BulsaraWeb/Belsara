@@ -1,4 +1,3 @@
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -7,22 +6,21 @@
 		<link type="text/css" rel="stylesheet" href="style.css" />
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		<script src="jquery-1.9.1.min.js"></script>
-			<script src="jquery.mousewheel.js"></script>
-		<script>		jQuery(function($) 
-								{
-								   
-								        
-							   });
-</script>
+		<script src="jquery.mousewheel.js"></script>
 		<script>
-		
+			jQuery(function($) {
+
+			});
+		</script>
+		<script>
 			$(document).ready(function() {
-						$("#biglietto").css("-webkit-transform", "rotate(-10deg)");
-													
+
+				$("#biglietto").css("-webkit-transform", "rotate(-10deg)");
+
 				//calcolo la larghezza dello schermo
-			 
+
 				var scrWidth = $(document).width();
-			
+
 				var scrHeight = $(document).height();
 				var w = $(document).width() / 4;
 				var top = -12;
@@ -30,192 +28,169 @@
 				var bottom = 0;
 				var left = -12;
 				var winit, wend, tinit, tend, hinit, hend, linit, lend, binit, bend, rinit, rend;
-				var offset_header=100;
+				var offset_header = 100;
+
 				var context = document.getElementById('myCanvas').getContext('2d');
 
-				  //
-			if(scrWidth>980)
-				{
+				jQuery.get('posizione_aperta.txt', function(data) {
+					$('#posizione_aperta').html('Posizione Aperta:' + data);
+
+				});
+				jQuery.get('video.txt', function(data) {
+					if (data.replace(" ", "") != "") {
+						for (var i = 0; i < 8; i++)
+							$("div_vetrina" + i).remove();
+
+						var needle = data.indexOf("?v=") + 3;
+						$("#gallery").html("<object width='980' height='500'><param name='movie' " + 'value=https://youtube.googleapis.com/v/' + data.substr(needle, needle + 11) + "?version=2&fs=1" + "<param name='allowScriptAccess' value='always'></param>" + "<embed src=https://youtube.googleapis.com/v/" + data.substr(needle, needle + 11) + "?version=2&fs=1&autoplay=1'" + "  type='application/x-shockwave-flash'" + " allowscriptaccess='always'" + " width='980' height='500'></embed>" + "</object>").css("width", 980).css("height", 500);
+
+					}
+
+				});
+
+				if (scrWidth > 980) {
 					//calcolo quanto spazio serve per centrare la schermata
-				var my_left=	(scrWidth-980)/2;
-				var my_right=   (scrWidth-980)/2;
-				$("#container").css("margin-left", my_left).css("margin-right", my_right);
-				
+					var my_left = (scrWidth - 980) / 2;
+					var my_right = (scrWidth - 980) / 2;
+					$("#container").css("margin-left", my_left).css("margin-right", my_right);
+
 				}
-				
+
 				$("#who_we_are").click(function() {
 					$('html, body').animate({
-						scrollTop : $('#chi_siamo').position().top-offset_header
+						scrollTop : $('#chi_siamo').position().top - offset_header
 					}, 700);
 				});
 				$("#services").click(function() {
 					$('html, body').animate({
-						scrollTop : $('#servizi').position().top-offset_header
+						scrollTop : $('#servizi').position().top - offset_header
 					}, 'slow');
 				});
 				$("#support").click(function() {
 					$('html, body').animate({
-						scrollTop : $('#supporto').position().top-offset_header
+						scrollTop : $('#supporto').position().top - offset_header
 					}, 'slow');
 				});
 				$("#partner").click(function() {
 					$('html, body').animate({
-						scrollTop : $('#compagni').position().top-offset_header
+						scrollTop : $('#compagni').position().top - offset_header
 					}, 'slow');
 				});
 				$("#join_us").click(function() {
 					$('html, body').animate({
-						scrollTop : $('#unisciti').position().top+offset_header
+						scrollTop : $('#unisciti').position().top + offset_header
 					}, 'slow');
 				});
 				$("#home").click(function() {
-					$('html, body').scrollTo($('#container'),5000).delay(7000);
+					$('html, body').scrollTo($('#container'), 5000);
 				});
 
-			
 				var zommed = false;
 				var top;
 				var left;
-				var scrWidth=980;
+				var scrWidth = 980;
+				var time_if;
+				var time_else;
+				var time_h;
+				var now_thumb;
+				var wait;
+				var count = 0;
+				var now = new Date;
+				var clicks;
+				$("#gallery").delegate(".thumbVetrina", "click", function(e)
 				
-
-				$(".thumbVetrina").click(function() {
+				   {
+					//wait=setTimeout(function(){$(this).unbind("click");},2000);
+					var now = new Date();
+					//
+					sessionStorage.setItem('elapsed_time', JSON.stringify(now.getSeconds()));
+                
+					var elapsed_time = sessionStorage.getItem('elapsed_time');
+                    var zoom_time;
+                     wait= now.getSeconds();
+					clicks = ($(this).data('clicks') || 0) + 1;
+					$(this).data('clicks', clicks);
 
 					var thumb;
 
-					if (!zommed) 
-					{
+					var id = $(this).attr("id");
+
+					// && (old+500==$.now())
+
+					if (!zommed)
+					 {
+					 	var secondsSinceEpoch = ($.now() / 1000) | 0;
+						var secondsInDay = ((secondsSinceEpoch % 86400) + 86400) % 86400;
+						var seconds = secondsInDay % 60;
+					
+					   // alert(seconds+' '+wait);
+					
+					 	(formatTimeOfDay($.now()));
+						
 						var w = 245;
 						var h = 200;
 						thumb = $(this);
-						//immagine piccola
+
+						for (var i = 0; i < 8; i++)//toglie il click a tutti
+							$("#vetrina" + i).unbind("click", false).fadeOut(100);
 
 						for (var i = 0; i < 8; i++)
 
 						//cancello tuttle le thumb tranne la mia che ingrandirò
 
-							if ($("#vetrina" + i).attr("id") != thumb.attr("id"))
+							if ($("#vetrina" + i).attr("id") != id)
 
-								$("#vetrina" + i).fadeOut(10);
-							
+								$("#vetrina" + i).unbind("click", false);
 							else//se è la mia
-
 							{
-								//rimetto la thumb nella posizione originale
-								//adesso si trova al limite in alto a sinistra
-								// a causa del fadeOut che ha fatto perdere la posizione
+								var marg = 0;
+								if (i > 3)
+									marg = 200;
 
-								$("#vetrina" + i).css("margin-left", thumb.position().left);
-								//
-								if (i > 3)//è in seconda fila quindi il top sara h
-							  		$("#vetrina" + i).css("margin-top", h);
-                           	
-								else   //è in prima fila top=0
-								$("#vetrina" + i).css("margin-top", 0);
-									
-								//centro l'immagine    
-								$("#vetrina" + i).animate({"margin-left" :(scrWidth/2-(w/2))+"px"},100);	
-								
-								
-								//ingrandisco l'immagine dal centro
-								$("#vetrina" + i).animate({
-									
-									'margin-left' : '0px',
-									
-									'margin-top' : '0px',
-									
-									'width' : '980px',
-									
-									'height' : '400px'
-														},
-									 400);
-								//
+								$("#vetrina" + i).fadeIn(50).animate({
+									"width" : 980,
+									"height" : 500
+								}, 100);
+
 							}
 
 						zommed = true;
-					} else// se l'immagine è ingrandita
+						// 	$(this).unbind("click");
+						//$("#" + id).bind("click");
+					} else if ((clicks % 2) == 0)// se l'immagine è ingrandita
 					{
+						//	alert(formatTimeOfDay($.now()));
+						//	alert("dd");
+						//	$(this).unbind("click");
+						//alert(clicks);
 
-						//rimpicciolisco l'immagine
+						$("#" + id).unbind("click", false);
+
+						for (var j = 0; j < 8; j++)
+							$("#vetrina" + j).fadeOut(10);
 
 						var w = 245;
 						var h = 200;
+
 						var big_image = $(this);
-						//scorro le immagini
-						$j=0;
-						for (var i = 7; i >= 0; i--) 
-						{
-							if ($("#vetrina" + i).attr("id") == big_image.attr("id"))//se e' la mia
-								if (i < 4)//prima fila
-								{
-									j=i;
-									//rimpicciolisco nel suo punto originale
-									$("#vetrina" + i).animate({
-										"width" : w,
-										
-										"height" : h,
-										
-										"margin-left" : w * (i % 4) + "px",
-										
-										"margin-top" : 0
-										
-																},
-																 
-									     200,
-									     "linear", 
-									     function() 
-									     {
-		
-												$("#vetrina" + i).css("margin-top", 0);
-												$("#vetrina" + i).css("margin-left", 0);
-		
-												for (var i = 8; i >= 0; i--)
-													$("#vetrina" + i).fadeIn(200);
-										}
-										);//animate
+						var m = 0;
+						var i = id.replace("vetrina", "");
+						if (i > 3)
+							m = 200;
+						//rimpicciolisco l'immagine
 
-								}//fila 1 
-								
-								
-								else//seconda fila
-								
-								{
-									j=i;
-									$("#vetrina" + i).animate({
-										"width" : w,
-										
-										"height" : h,
-										
-										"margin-left" : w * (i % 4) + "px",
-										
-										"margin-top" : 250
-										
-														}, 
-										200, 
-										"linear", 
-										function() 
-										{
+						$("#vetrina" + i).fadeIn(50).animate({
+							"width" : w,
+							"height" : h
+						}, 50);
 
-												$("#vetrina" + i).css("margin-top", "0px");
-												$("#vetrina" + i).css("margin-left", "0px");
-		
-												for (var i = 7; i >= 0; i--)
-													$("#vetrina" + i).fadeIn(50);
-										}
-										);//animate
-								}//fila 2
+						for (var j = 7; j >= 0; j--)
 
-						}//for
+							$("#vetrina" + j).fadeIn(500);
 
 						zommed = false;
-						
-						//rimetto a posto i margini
-						$("#vetrina"+j).animate({"margin-top" : "0px"}, 1);
-					    $("#vetrina"+j).animate({"margin-left" : "0px"}, 1).fadeIn(200);
-						//
-					}// else
 
-					
+					}
 
 				});
 				//click vetrina any
@@ -223,83 +198,78 @@
 				var startingHeight = $("#gallery").height();
 				var lastScrollTop = 0;
 
+				$('#container').bind('mousewheel', function(event, delta) {
+					var dir = delta > 0 ? 'Up' : 'Down', vel = Math.abs(delta);
 
-						
-						 $('#container')
-								        .bind('mousewheel', 
-								         function(event, delta) 
-								            {
-								                var dir = delta > 0 ? 'Up' : 'Down',
-								                vel = Math.abs(delta);
-								                
-								             // return false;
-								            });
+					// return false;
+				});
 				$(window).on("scroll", function() {//sto scrollando la finestra
-				
 
-														for(var i=0; i<60; i++)
-														   {
-														   	context.beginPath();
-      														context.arc(10+i*20, 10, 5, 0, 2 * Math.PI, false);
-      														context.fillStyle = 'gray';
-														    context.fill();
-														   }
-														   
-														var prop=$(window).scrollTop()/$(window).height();
-														for(var i=0; i<prop*60; i++)
-														   {
-														   	context.beginPath();
-      														context.arc(10+i*20, 10, 5, 0, 2 * Math.PI, false);
-      														context.fillStyle = 'red';
-														    context.fill();
-														   }
-														
-														$("#gallery").css("height",startingHeight-$(window).scrollTop());
-														statTop= $("#gallery").position().top + (startingHeight-$(window).scrollTop())  +$("#menu_header").height();
-														$("#div_stat").css("top",statTop);
-														
-														
-														$('.stat').each(function(index) 
-														                 {
-														                  var distance=Math.abs($(this).offset().top-($(window).scrollTop()+$(window).height()/2.0));
-														                  if(distance<$(window).height()/2.0)
-														                    {
-																		     var scale=50*(1.0 - distance / ($(window).height()/2.0) );
-																		     //$("#log").text(""+scale);
-																		     $(this).css('font-size',10+scale);
-																		    }
-														                 });
-													
-//------------------------------------------------ANIMAZIONE BIGLIETTO.--------------------------------
-																								
-													if($("#biglietto").position().top>=($(window).scrollTop()+100)&&$("#biglietto").position().top<=($(window).scrollTop()+400))
-														{ 
-															
-															$(".footer").animate({'margin-top':'-370px'},
-																			{
-																				duration:1000,
-																				
-																				complete: function(){
-																					 					
-																					 					$("#biglietto").css("-moz-transition-delay","0s, 0s, 0s");
-																									$("#biglietto").css("-webkit-transform", "rotate(5deg)");
-																									//$("#biglietto").css("transform", "rotateX(4.6deg)");
-															
-																									
-																									}
-																			}
-																				);
-															//$(".footer").animate({'margin-left':'100px'},400);
-															//$("#biglietto").hide("drop",{direction:"up"},200).show("drop",{direction:"up"},200);
-															
-															
-														}
-													
-													
-													
-																						
-													});
-													// on scroll
+					for (var i = 0; i < 60; i++) {
+						context.beginPath();
+						context.arc(10 + i * 20, 10, 5, 0, 2 * Math.PI, false);
+						context.fillStyle = 'gray';
+						context.fill();
+					}
+
+					var prop = $(window).scrollTop() / $(window).height();
+					for (var i = 0; i < prop * 60; i++) {
+						context.beginPath();
+						context.arc(10 + i * 20, 10, 5, 0, 2 * Math.PI, false);
+						context.fillStyle = 'red';
+						context.fill();
+					}
+
+					$("#gallery").css("height", startingHeight - $(window).scrollTop());
+					statTop = $("#gallery").position().top + (startingHeight - $(window).scrollTop()) + $("#menu_header").height();
+					$("#div_stat").css("top", statTop);
+
+					$('.stat').each(function(index) {
+						var distance = Math.abs($(this).offset().top - ($(window).scrollTop() + $(window).height() / 2.0));
+						if (distance < $(window).height() / 2.0) {
+							var scale = 50 * (1.0 - distance / ($(window).height() / 2.0) );
+							//$("#log").text(""+scale);
+							$(this).css('font-size', 10 + scale);
+						}
+					});
+
+					//------------------------------------------------ANIMAZIONE BIGLIETTO.--------------------------------
+
+					if ($("#biglietto").position().top >= ($(window).scrollTop() + 100) && $("#biglietto").position().top <= ($(window).scrollTop() + 800)) {
+
+						$(".footer").animate({
+							'margin-top' : '-370px'
+						}, {
+							duration : 1000,
+
+							complete : function() {
+
+								//$("#biglietto").css("-moz-transition-delay","0s, 0s, 0s");
+								$("#biglietto").css("-webkit-transform", "rotate(5deg)");
+								$("#biglietto").css("-moz-transform", "rotate(5deg)");
+								$("#biglietto").css("-o-transform", "rotate(5deg)");
+								$("#biglietto").css("-ms-transform", "rotate(5deg)");
+								$("#biglietto").css("transform", "rotate(5deg)");
+								//$("#biglietto").css("transform", "rotateX(4.6deg)");
+
+							}
+						});
+						//$(".footer").animate({'margin-left':'100px'},400);
+						//$("#biglietto").hide("drop",{direction:"up"},200).show("drop",{direction:"up"},200);
+
+					}
+
+				});
+				// on scroll
+
+				function formatTimeOfDay(millisSinceEpoch) {
+					var secondsSinceEpoch = (millisSinceEpoch / 1000) | 0;
+					var secondsInDay = ((secondsSinceEpoch % 86400) + 86400) % 86400;
+					var seconds = secondsInDay % 60;
+					var minutes = ((secondsInDay / 60) | 0) % 60;
+					var hours = (secondsInDay / 3600) | 0;
+					return hours + (minutes < 10 ? ":0" : ":") + minutes + (seconds < 10 ? ":0" : ":") + seconds;
+				}
 
 			});
 			//document.ready
@@ -309,8 +279,10 @@
 	<body>
 
 		<div id="menu_header" >
-			<a id="casa" href="#"> Home</a><a id="who_we_are" href="#"> Chi Siamo</a><a id="services" href="#"> Servizi</a><a href="#" id="support"> Supporti</a><a href="#" id="partner"> Partner</a><a href="#" id="join_us"> Join us</a><a href="#" id="contact"> Contact</a>
-<br><canvas id="myCanvas" width="980" height="40"></canvas>
+			<a id="casa" href="#"> Home</a><a id="who_we_are" href="#"> Chi Siamo</a><a id="services" href="#"> Servizi</a><a href="#" id="support"> Supporti</a><a href="#" id="partner"> Partner</a><a href="#" id="join_us"> Join us</a><a href="#" id="contact"> Contact</a><a href="login.php"> Login</a>
+			<!--<?php if($_SESSION["user"]!="")echo "<a href='login.php'>Login</a>";?>-->
+			<br>
+			<canvas id="myCanvas" width="980" height="40"></canvas>
 		</div>
 		<div id="container"   style=" text-align:center" >
 			<!--<div id="lente" style="width:200px;height:200px;background-color:#b0c4de;"></div>-->
@@ -333,30 +305,94 @@
 				</div>
 
 			</div>
-			
-			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
 			<div id="chi_siamo">
 				<h2 align="center">CHI SIAMO</h2>
 				<p align="center" style="background-color:#C0C0C0;font-family:'Imprint MT Shadow'; font-size:33px">
-					Bulsara, dal termine inglese bull s eye, il centro del bersaglio, <br>
-					e una concessionaria Italia nel settore del Toilet Advertising,  <br>
-					la promozione pubblicitaria all interno dei servizi igienici.     <br>
+					Bulsara, dal termine inglese bull s eye, il centro del bersaglio,
+					<br>
+					e una concessionaria Italia nel settore del Toilet Advertising,
+					<br>
+					la promozione pubblicitaria all interno dei servizi igienici.
+					<br>
 				</p>
-				
+
 			</div>
-			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-			
-          
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<div style="font-size: larger;" id="posizione_aperta"></div>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+
 		</div>
-		 <div id="footer">
-           	<img id="biglietto" src="biglietto.png" class="biglietto"/>
-           	<img class="footer" src="footer.png" />
-           	
-           	
-           </div>
+		<div id="footer">
+			<img id="biglietto" src="biglietto.png" class="biglietto"/>
+			<img class="footer" src="footer.png" />
+
+		</div>
+
 	</body>
-	<?php
-	session_start();
-	$_SESSION["user"]="anyone";
-	 ?>
+
 </html>

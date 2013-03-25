@@ -9,6 +9,9 @@
 	</head>
 	<body>
 		<?php
+		session_start();
+		
+		if($_SESSION["user"]=="chief")header("location:backend.php");
 		   if(isset($_GET['error'])&&($_GET['error']==true))
 
 			   {
