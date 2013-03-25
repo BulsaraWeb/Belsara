@@ -1,7 +1,7 @@
 $(document).ready(function() 
 				{
 				 for(var i=0; i<60; i++)
-					 $('#pallini').append('<img class="unpallino" src="pallini/pallino-grigio.png"/> ');
+					 $('#pallini').append('<img class="unpallino" src="pallini/pallino-grigio.png"/>');
 			    });
 
 

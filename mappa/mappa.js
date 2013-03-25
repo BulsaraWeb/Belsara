@@ -20,7 +20,7 @@
       var infoWindow = new google.maps.InfoWindow;
 
       // Change this depending on the name of your PHP file
-      downloadUrl("mapController.php", function(data) {
+      downloadUrl("mappa/mapController.php", function(data) {
         var xml = data.responseXML;
         var markers = xml.documentElement.getElementsByTagName("marker");
         for (var i = 0; i < markers.length; i++) {
@@ -76,5 +76,5 @@
 
 $(document).ready(function() 
 				{
-				 load()
+				 load();
 				});
