@@ -27,10 +27,10 @@ if (!$db_selected) {
 }
 
 // Select all the rows in the markers table
-$query = "SELECT * FROM markers WHERE 1";
+$query = "SELECT * FROM markers INNER JOIN category ON markers.category_exkey = category.id";
 $result = mysql_query($query);
 if (!$result) {
-  die('Invalid query');
+  die('Invalid query'.$result);
 }
 
 header("Content-type: text/xml");
@@ -45,7 +45,8 @@ while ($row = @mysql_fetch_assoc($result))
   $tableFields[]="address";
   $tableFields[]="lat";
   $tableFields[]="lng";
-  $tableFields[]="type";
+  $tableFields[]="category_exkey";
+  $tableFields[]="pinPath";
  
   
   for($i=0; $i<sizeof($tableFields); $i++)
