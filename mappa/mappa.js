@@ -62,7 +62,7 @@
       };
 
       request.open('GET', url, true);
-      request.send(null);
+      request.send();
     }
 
     function doNothing() {}
