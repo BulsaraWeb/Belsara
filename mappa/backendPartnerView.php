@@ -15,8 +15,84 @@ if($_SESSION['user']!='chief')
 		<!--<script type="text/javascript" src="jscolor/jscolor.js"></script>-->
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
-		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+		<!--<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>-->
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
 		<script>
+		
+		 //<![CDATA[
+
+    var customIcons = {
+      restaurant: {
+        icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png',
+        shadow: 'http://labs.google.com/ridefinder/images/mm_20_shadow.png'
+      },
+      bar: {
+        icon: 'http://labs.google.com/ridefinder/images/mm_20_red.png',
+        shadow: 'http://labs.google.com/ridefinder/images/mm_20_shadow.png'
+      }
+    };
+
+    function load() {
+     
+      var map = new google.maps.Map(document.getElementById("map"), {
+        center: new google.maps.LatLng(47.6145, -122.3418),
+        zoom: 13,
+        mapTypeId: 'roadmap'
+      });
+      var infoWindow = new google.maps.InfoWindow;
+
+      // Change this depending on the name of your PHP file
+      	
+      downloadUrl("backendCityMapController.php?prova=2", function(data) {
+        var xml = data.responseXML;
+        var markers = xml.documentElement.getElementsByTagName("marker");
+        for (var i = 0; i < markers.length; i++) {
+          var name = markers[i].getAttribute("name");
+          var address = markers[i].getAttribute("address");
+          var type = markers[i].getAttribute("category_exkey");
+          var point = new google.maps.LatLng(
+              parseFloat(markers[i].getAttribute("lat")),
+              parseFloat(markers[i].getAttribute("lng")));
+          var html = "<b>" + name + "</b> <br/>" + address;
+          var icon = markers[i].getAttribute("pinPath");
+          
+          var marker = new google.maps.Marker({
+            map: map,
+            position: point,
+            icon: "http://www.bulsara.it/newSite/mappa/"+icon,
+          });
+          bindInfoWindow(marker, map, infoWindow, html);
+        }
+      });
+    }
+
+    function bindInfoWindow(marker, map, infoWindow, html) {
+      google.maps.event.addListener(marker, 'click', function() {
+        infoWindow.setContent(html);
+        infoWindow.open(map, marker);
+      });
+    }
+
+    function downloadUrl(url, callback) {
+      var request = window.ActiveXObject ?
+          new ActiveXObject('Microsoft.XMLHTTP') :
+          new XMLHttpRequest;
+
+      request.onreadystatechange = function() {
+        if (request.readyState == 4) {
+          request.onreadystatechange = doNothing;
+          callback(request, request.status);
+        }
+      };
+
+      request.open('GET', url, true);
+      request.send();
+    }
+
+    function doNothing() {}
+
+    //]]>
+		
 		
 		var actualCatSelected=-1;
 		
@@ -93,16 +169,7 @@ if($_SESSION['user']!='chief')
 	                $('input[name=catNumber]').val($("#num"+actualCatSelected).text());
 		          };
 		          
-		function enableDisableButtonNewLoc()
-		          {
-		          	
-	                 if($('input[name=locName]').val()=="")
-	                   {
-	                    $('input[id=insertLoc]').attr("disabled", "disabled");;
-	                    return;
-	                   } 
-	                   $('input[id=insertLoc]').removeAttr("disabled");	
-		          };
+
 		          
 		          
 		function initialize() 
@@ -157,12 +224,14 @@ if($_SESSION['user']!='chief')
 			     							     });
       				}
       
-        google.maps.event.addDomListener(window, 'load', initialize);		          
+       // google.maps.event.addDomListener(window, 'load', initialize);		          
 		          
 		          
 		          
 		$(document).ready(function() 
 				{
+				 load();
+				 
 				 actualCatSelected=-1;
 				});
 		</script>
@@ -182,7 +251,7 @@ if($_SESSION['user']!='chief')
 	   $cat=getCategories();
 	   ?>
 	   <center>
-	   	<form action="backendCategoryController.php" method="post" enctype="multipart/form-data" onSubmit="return checkForm()">
+	   	<form action="backendPartnerController.php" method="post" enctype="multipart/form-data" onSubmit="return checkForm()">
 	   	 <table width="80%">
 	   	  <tr>
 	   	   <td>
@@ -226,7 +295,9 @@ if($_SESSION['user']!='chief')
 	  	    Color:<br>
 	  	    <input id="catColor" type="text" name="catColor" onfocus="if($(this).val=='FFFFFF') $('input[value=Inserisci]').attr('disabled', 'disabled'); else  " class="color">-->
 	   	   </td>
-	   	   
+	   	   <td>
+	   	   	<div id="map" style="width: 500px; height: 300px"> </div>
+	   	   </td>
 	   	  </tr>
 	   	 </table>
         <br>
@@ -235,14 +306,7 @@ if($_SESSION['user']!='chief')
 	    <input type="submit" value="Modifica" disabled>
 	    
 	   </form>
-	   
-	   <br><br><br><br><br><br>
-	   <!-- Insert new location -->
-	   
-	   <form action="backendMappa.php" method="post">
-	    <br>Nuovo Partner (indirizzo): <input id="searchLoc" type="text" name="locName" onkeydown="enableDisableButtonNewLoc();">
-	    <input type="submit" value="Inserisci" id="insertLoc" disabled >
-	   </form>
+	  
 	   
 
 	  </center>

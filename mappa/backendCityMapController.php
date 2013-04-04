@@ -9,6 +9,8 @@ mysql_select_db("Sql634189_1");
 $xmlDoc = new DOMDocument('1.0', 'iso-8859-1');
 $root = $xmlDoc->appendChild($xmlDoc->createElement("markers"));
 
+
+
 /*
 $doc = domxml_new_doc("1.0");
 $node = $doc->create_element("markers");
@@ -64,6 +66,9 @@ while ($row = @mysql_fetch_assoc($result))
   $newnode->set_attribute("lng", $row['lng']);
   $newnode->set_attribute("type", $row['type']);*/
 }
+
+if(is_numeric($_GET["prova"])&&($_GET["prova"]>0))
+   ;
 
 mysql_close($connection);
 echo $xmlDoc->saveXML();
