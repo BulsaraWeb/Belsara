@@ -42,7 +42,7 @@ if($_SESSION['user']!='chief')
       var infoWindow = new google.maps.InfoWindow;
 
       // Change this depending on the name of your PHP file
-      	alert("valerio bestemmia");
+      	
       downloadUrl("backendCityMapController.php", function(data) {
         var xml = data.responseXML;
         var markers = xml.documentElement.getElementsByTagName("marker");
@@ -55,7 +55,7 @@ if($_SESSION['user']!='chief')
               parseFloat(markers[i].getAttribute("lng")));
           var html = "<b>" + name + "</b> <br/>" + address;
           var icon = markers[i].getAttribute("pinPath");
-          alert("http://www.bulsara.it/newSite/mappa/"+icon);
+          
           var marker = new google.maps.Marker({
             map: map,
             position: point,
