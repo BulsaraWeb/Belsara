@@ -15,12 +15,12 @@ if($_SESSION['user']!='chief')
 		<!--<script type="text/javascript" src="jscolor/jscolor.js"></script>-->
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
-		<!--<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>-->
-		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+		<!--<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>-->
 		<script>
 		
 		 //<![CDATA[
-
+    var map;
     var customIcons = {
       restaurant: {
         icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png',
@@ -34,7 +34,7 @@ if($_SESSION['user']!='chief')
 
     function load() {
      
-      var map = new google.maps.Map(document.getElementById("map"), {
+        map = new google.maps.Map(document.getElementById("map"), {
         center: new google.maps.LatLng(47.6145, -122.3418),
         zoom: 13,
         mapTypeId: 'roadmap'
@@ -91,13 +91,104 @@ if($_SESSION['user']!='chief')
 
     function doNothing() {}
 
+	function modifyPartnerList(idCat) 
+	{
+     
+	 var url="backendCityMapController.php";
+	 
+	 if(idCat!="All")
+	   {
+	   	url+="?idCat="+idCat;
+	   	// Enable Disable Add / Del
+	   }
+	 else
+	   {
+	   	// Enable Disable Add / Del
+	   }
+	    
+	 downloadUrl(url, function(data)
+	   {
+	    var xml = data.responseXML;
+        var markers = xml.documentElement.getElementsByTagName("marker");
+ 	    $("#partnerList").empty();
+ 	    $("#partnerInfos").html(" ");
+        for (var i = 0; i < markers.length; i++) 
+           {
+           	var option = $('<option></option>').attr("value", markers[i].getAttribute("idpar"))
+           									   //.attr("id", markers[i].getAttribute("id"))
+           	                                   .text(markers[i].getAttribute("name"));
+            $("#partnerList").append(option);
+            var divNum = "<div id='num"+markers[i].getAttribute("par")+"' style='display: none;'>"+markers[i].getAttribute("number")+"</div>";
+            var divAddress = "<div id='address"+markers[i].getAttribute("par")+"' style='display: none;'>"+markers[i].getAttribute("address")+"</div>";
+           	var img="<img id='fotoNo'>";
+            if(markers[i].getAttribute("fotoPath")!="null" && markers[i].getAttribute("fotoPath")!=null)
+               img='<img id="foto'+markers[i].getAttribute("idpar")+'" src="'+markers[i].getAttribute("fotoPath")+'" style="display: none;"/>';
+           	$("#partnerInfos").html($("#partnerInfos").html()+divNum+divAddress);
+           	$("#FotoView").html($("#FotoView").html()+img)
+           	
+           }
+         deselectPartner();
+       });
+	}
     //]]>
-		
+           	
+          
+
+
+
 		
 		var actualCatSelected=-1;
+		var actualParSelected=-1;
+		
+		function setLatLng(address) 
+		        {
+                 var geocoder = new google.maps.Geocoder(); 
+                 $("#LOAD_COORD").css("display","block");
+		         geocoder.geocode
+		            ({
+			 	      address : address, 
+				      region: 'no' 
+			         },function(results, status) 
+		                      {
+		                       $("#LOAD_COORD").css("display","none");
+		    	               if(status.toLowerCase() == 'ok')
+		    	                 {
+					              // Get center
+					              var coords = new google.maps.LatLng
+					                     (
+						                  results[0]['geometry']['location'].lat(),
+						                  results[0]['geometry']['location'].lng()
+					                     );
+					              $("#parLat").val(coords.lat());
+					              $("#parLng").val(coords.lng());
+					              
+					              //jQuery('#coords').html('Latitute: ' + coords.lat() + '    Longitude: ' + coords.lng() );
+                                  map.setCenter(coords);
+					              map.setZoom(18);
+ 
+					              // Set marker also
+					              marker = new google.maps.Marker
+					                      ({
+						                    position: coords, 
+						                    map: map, 
+						                    title: address,
+					                      });
+					              $("#OK").css("display","block");
+					              $("#ERROR").css("display","none");
+		    	                 }
+		    	               else
+		    	                 {
+		    	                  $("#OK").css("display","none");
+					              $("#ERROR").css("display","block");	
+		    	                 }
+			                  });
+	               }
+		
 		
 		function checkForm()
 		          {
+		          	$("#OK").css("display","none");
+					$("#ERROR").css("display","none");
 		           if($('#changePin').is(':checked'))
 		             {
 		              var str=$("#catPin").val();
@@ -117,9 +208,19 @@ if($_SESSION['user']!='chief')
 		           return true;  
 		          }
 		          
+		function handleAddressManager()
+		          {
+		           if($('#changeAddress').is(':checked')) 
+					  $("#addressManager").css("display","block");
+				   else 
+					  $("#addressManager").css("display","none");
+		          }
+		          
 		function handleFileManager()
 		          {
-		           if($('#changePin').is(':checked')) 
+		           $("#OK").css("display","none");
+				   $("#ERROR").css("display","none");
+		           if($('#changeFoto').is(':checked')) 
 					  $("#fileManager").css("display","block");
 				   else 
 					  $("#fileManager").css("display","none");
@@ -131,42 +232,66 @@ if($_SESSION['user']!='chief')
 		          };
 		          
 		    
+		function deselectPartner()
+		          {
+		          	actualParSelected=-1;
+		          	  $("#OK").css("display","none");
+				      $("#ERROR").css("display","none");
+		          	  $('input[name=parName]').val("");
+		          	  $('input[name=parNumber]').val("");
+		          	  $("#actualAddress").html("");
+		          	  $('input[name=parName]').css("background-color","#FFFFFF");
+		          	  $('input[name=parNumber]').css("background-color","#FFFFFF");
+		          	  $('input[name=changeAddress]').attr("disabled","disabled");
+		          	  $('input[name=parAddress]').attr("disabled","disabled");
+		          	  $('input[name=parCheckAddress]').attr("disabled","disabled");
+		          	  $('input[name=parName]').attr("disabled","disabled");
+		          	  $('input[name=parNumber]').attr("disabled","disabled");
+		          	  $('input[name=changeFoto]').attr("disabled", "disabled");
+		          	  $('input[name=parFoto]').attr("disabled", "disabled");
+		          	  
+		          	  
+		          }
 		
 		function enableForm()
 		          {
-		          	
-		          	  $("#pin"+actualCatSelected).css("display","none");
-		          	  $('input[name=catDescr]').val("");
-		          	  $('input[name=catName]').val("");
-		          	  $('input[name=catNumber]').val("");
-		          	  $('input[name=catDescr]').attr("disabled", "disabled");
-		          	  $('input[name=catName]').attr("disabled", "disabled");
-		          	  $('input[name=catNumber]').attr("disabled", "disabled");
-		          	  $('input[name=changePin]').attr("disabled", "disabled");
-		          	  $('input[name=catPin]').attr("disabled", "disabled");
-	
-		          	  $('input[name=catDescr]').css("background-color","#FFFFFF");
-		          	  $('input[name=catName]').css("background-color","#FFFFFF");
-		          	  $('input[name=catNumber]').css("background-color","#FFFFFF");
+		          	$("#OK").css("display","none");
+				   $("#ERROR").css("display","none");
+		           //$("#pin"+actualParSelected).css("display","none");
+		          $("#foto"+actualParSelected).css("display","none");
+		          	  $('input[name=parName]').val("");
+		          	  $('input[name=parNumber]').val("");
+		          	  $('#actualAddress').html(" ");
+		          	  $('input[name=changeAddress]').attr("disabled","disabled");
+		          	  $('input[name=parAddress]').attr("disabled","disabled");
+		          	  $('input[name=parName]').attr("disabled","disabled");
+		          	  $('input[name=parNumber]').attr("disabled","disabled");
+		          	  $('input[name=parCheckAddress]').attr("disabled","disabled");
+		          	  $('input[name=parName]').css("background-color","#FFFFFF");
+		          	  $('input[name=parNumber]').css("background-color","#FFFFFF");
 		          	  
-	                if($('#listaCategorie').val()<=0)
+	                if($('#partnerList').val()<=0)
 	                  {
 	                   $('input[value=Modifica]').attr("disabled", "disabled");;
 	                   return;
-	                   actualCatSelected=-1;
+	                   actualParSelected=-1;
 	                  } 
-	                actualCatSelected=$('#listaCategorie').val();
+	                actualParSelected=$('#partnerList').val();
 	                $('input[value=Modifica]').removeAttr("disabled");
-	                $('input[name=catDescr]').removeAttr("disabled");
-		          	$('input[name=catName]').removeAttr("disabled");
-		          	$('input[name=catNumber]').removeAttr("disabled");
-		          	$('input[name=changePin]').removeAttr("disabled");
-		          	$('input[name=catPin]').removeAttr("disabled");
-	                //alert(actualCatSelected);
-	                $("#pin"+actualCatSelected).css("display","block");
-	                $('input[name=catDescr]').val($("#cat"+actualCatSelected).attr("title"));
-	                $('input[name=catName]').val($("#listaCategorie option[value='"+actualCatSelected+"']").text());
-	                $('input[name=catNumber]').val($("#num"+actualCatSelected).text());
+	                
+		          	$('input[name=parName]').removeAttr("disabled");
+		          	$('input[name=parNumber]').removeAttr("disabled");
+		          	$('input[name=changeAddress]').removeAttr("disabled");
+		          	$('input[name=parAddress]').removeAttr("disabled");
+		          	$('input[name=changeFoto]').removeAttr("disabled");
+		          	$('input[name=parFoto]').removeAttr("disabled");
+	                $('#parCheckAddress').removeAttr("disabled");
+	                $("#foto"+actualParSelected).css("display","block");
+	                
+	                $('input[name=parName]').val($("#partnerList option[value='"+actualParSelected+"']").text());
+	                $("#actualAddress").html($("#address"+actualParSelected).html());
+	                $('input[name=parNumber]').val($("#num"+actualParSelected).html());
+	                
 		          };
 		          
 
@@ -174,7 +299,7 @@ if($_SESSION['user']!='chief')
 		          
 		function initialize() 
 		          {
-		 		   input = document.getElementById('searchLoc');
+		 		   input = document.getElementById('parAddress');
 			        var autocomplete = new google.maps.places.Autocomplete(input);
 			        var infowindow = new google.maps.InfoWindow();
 		
@@ -207,7 +332,7 @@ if($_SESSION['user']!='chief')
 										             return;
 										            }
 												  //document.getElementById('PrivateUser_LOCATION').value=place.geometry.location;
-												  alert(place.geometry.location);
+												  //alert(place.geometry.location);
 										          var address = '';
 			          
 										          if(place.address_components) 
@@ -224,7 +349,7 @@ if($_SESSION['user']!='chief')
 			     							     });
       				}
       
-       // google.maps.event.addDomListener(window, 'load', initialize);		          
+        google.maps.event.addDomListener(window, 'load', initialize);		          
 		          
 		          
 		          
@@ -233,6 +358,7 @@ if($_SESSION['user']!='chief')
 				 load();
 				 
 				 actualCatSelected=-1;
+				 actualParSelected=-1;
 				});
 		</script>
 		</head>
@@ -249,55 +375,87 @@ if($_SESSION['user']!='chief')
 	   
 	   // Category List
 	   $cat=getCategories();
+	   $par=getMarkers();
 	   ?>
 	   <center>
 	   	<form action="backendPartnerController.php" method="post" enctype="multipart/form-data" onSubmit="return checkForm()">
-	   	 <table width="80%">
+	   	 <table width="85%">
 	   	  <tr>
 	   	   <td>
 	   	    Categorie <br>Presenti:<br>
-	   	    <?php
-	   	    foreach($cat as $k=>$v)
-		              echo '<div id="num'.$k.'" style="display: none;">'.$v['number'].'</div>'
-		     ?>
+	   	    
 		     
-	   	    <select id="listaCategorie" name="categoryList" id="category" size="8" onchange="enableForm();">
+	   	    <select id="listaCategorie" name="categoryList" id="category" size="7" onchange="modifyPartnerList($(this).val());">
 		   	 
-		   	  <?php
-		   	  
+		   	  <?php		   	  
+		   	   echo '<option id="catAll" value="All" title=":: All ::" selected="selected">All</option>';
 			   foreach($cat as $k=>$v)
 		              echo '<option id="cat'.$k.'" value="'.$k.'" title="'.$v['description'].'">'.$v['catName'].'</option>';
 		   		?>
        	    </select>
        	   </td>
        	   <td>
-            Nome Categoria:
-            <br>
-            <input id="catName" type="text" name="catName" onkeydown=" checkNew($(this));" disabled>
-            <br><br>
-	  	    Sottotitolo Categoria:
-	  	    <br><input id="catDescr" type="text" name="catDescr" onchange="checkNew($(this));" onkeydown="checkNew($(this));" disabled>
-	   	   </td>
-	   	   <td>
-	   	   	Immagine Pin (attuale:)
-		    <?php
-			  foreach($cat as $k=>$v)
-				      echo '<img id="pin'.$k.'" src="'.$v['pinPath'].'" style="display: none;"/>';			         
-			?><br>
-			<input type="checkbox" id="changePin" name="changePin" value="changePin" onchange='handleFileManager();' disabled>(cambia:)<br><br>
-			<div id="fileManager" style="display: none">
-	   		 <input id="catPin" value="clicca per modificare" name="catPin" type="file" disabled>  <!-- onchange="checkNew($(this));" onkeydown="checkNew($(this));">-->
+       	   	Partner per<br>
+       	   	categoria:<br>
+       	   	<?php
+       	   	echo '<div id="partnerInfos">';
+	   	    foreach($par as $k=>$v)
+		              {
+		              	echo '<div id="num'.$k.'" style="display: none;">'.$v['number'].'</div>';
+						echo '<div id="address'.$k.'" style="display: none;">'.$v['address'].'</div>';
+					  }
+		    echo '</div>';
+		     ?>
+       	   	<select id="partnerList" name="partnerList" id="category" size="8" onchange="enableForm();">
+		   	  <?php
+			   foreach($par as $k=>$v)
+		              echo '<option id="par'.$k.'" value="'.$k.'">'.$v['name'].'</option>';
+		   		?>
+       	    </select>
+       	   </td>
+       	   <td>
+       	   	Nome Partner:
+       	   	<br>
+            <input id="parName" type="text" name="parName" onkeydown=" checkNew($(this));" disabled><br>
+            Indirizzo (attuale:)<br>
+            <div id="actualAddress"> </div><br>
+            <input type="checkbox" id="changeAddress" name="changeAddress" value="changeAddress" onchange='handleAddressManager();' disabled>(cambia:)<br><br>
+			<div id="addressManager" style="display: none">
+			 <img id="LOAD_COORD" src="loading.gif" style="display: none; width: 30px; height: 30px;" />	
+			 <img id="OK" src="Check.png" style="display:none; width: 30px; height: 30px;">
+			 <img id="ERROR" src="Error.png" style="display:none; width: 30px; height: 30px;">	
+	   		 <input id="parAddress" placeholder="digita un indirizzo" name="parAddress" onchange='setLatLng($(this).val());' disabled>
+	   		 <input id="parCheckAddress" type="button" value="set" onclick='setLatLng($("#parAddress").val());' disabled>  <!-- onchange="checkNew($(this));" onkeydown="checkNew($(this));">-->
+	   		 
 	  	    </div>
-	  	     <br><br>
-            Numero:<br>
-            <input id="catNumber" type="text" name="catNumber" onchange="checkNew($(this));" onkeydown="checkNew($(this));" disabled>
-	  	    <!--<br><br>
-	  	    Color:<br>
-	  	    <input id="catColor" type="text" name="catColor" onfocus="if($(this).val=='FFFFFF') $('input[value=Inserisci]').attr('disabled', 'disabled'); else  " class="color">-->
-	   	   </td>
+       	   </td>
+       	   <td>
+       	   	Number Partner:
+       	   	<br>
+            <input id="parNumber" type="text" name="parNumber" onkeydown=" checkNew($(this));" disabled>
+       	   </td>
 	   	   <td>
-	   	   	<div id="map" style="width: 500px; height: 300px"> </div>
+	   	   	<div id="map" style="width: 300px; height: 300px"> </div>
 	   	   </td>
+	   	  </tr>
+	   	  <tr>
+           <td>
+           	<input id="parLat" type="text" name="parLat"><!-- style="display: none;"><br>--></br>
+           	<input id="parLng" type="text" name="parLng"><!-- style="display: none;"><br>--></br>
+           </td>
+           <td>
+           </td>
+           <td colspan="3" id="FotoView">
+           	Immagine Dettaglio (attuale:)
+		    <?php
+			  foreach($par as $k=>$v)
+				      echo '<img id="foto'.$k.'" src="'.$v['fotoPath'].'" style="display: none;"/>';			         
+			?><br>
+			<input type="checkbox" id="changeFoto" name="changeFoto" value="changeFoto" onchange='handleFileManager();' disabled>(cambia:)<br><br>
+			<div id="fileManager" style="display: none">
+	   		 <input id="parFoto" value="clicca per modificare" name="parFoto" type="file" disabled>  <!-- onchange="checkNew($(this));" onkeydown="checkNew($(this));">-->
+	  	    </div>
+           </td>   	  
 	   	  </tr>
 	   	 </table>
         <br>

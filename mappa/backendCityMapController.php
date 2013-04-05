@@ -29,7 +29,7 @@ if (!$db_selected) {
 }
 
 // Select all the rows in the markers table
-$query = "SELECT * FROM markers INNER JOIN category ON markers.category_exkey = category.id";
+$query = "SELECT markers.id as idpar, name, address, lat, lng, category_exkey, pinPath, category.id FROM markers INNER JOIN category ON markers.category_exkey = category.id";
 $result = mysql_query($query);
 if (!$result) {
   die('Invalid query'.$result);
@@ -39,6 +39,7 @@ header("Content-type: text/xml");
 
 // Iterate through the rows, adding XML nodes for each
 $tableFields=array();
+$tableFields[]="idpar";
 $tableFields[]="name";
 $tableFields[]="address";
 $tableFields[]="lat";

@@ -270,7 +270,7 @@ if($_SESSION['user']!='chief')
 		              echo '<div id="num'.$k.'" style="display: none;">'.$v['number'].'</div>'
 		     ?>
 		     
-	   	    <select id="listaCategorie" name="categoryList" id="category" size="8" onchange="enableForm(); load($(this).val());">
+	   	    <select id="listaCategorie" name="categoryList" id="category" size="6" onchange="enableForm(); load($(this).val());">
 		   	 
 		   	  <?php
 		   	  

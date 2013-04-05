@@ -1,23 +1,33 @@
 <?php
   require("markerModel.php");
-  if(isset($_POST['categoryList']))
+  if(isset($_POST['partnerList']))
     {
-     $id=$_POST['categoryList'];
+     $id=$_POST['partnerList'];
      $toBeUpdated=array();
 	 $err=0;
-	 if(isset($_POST["catName"]))
-	    $toBeUpdated['catName']=$_POST["catName"];
-     if(isset($_POST["catNumber"]))
-	    $toBeUpdated['number']=$_POST["catNumber"];
-	 if(isset($_POST["catDescr"]))
-	    $toBeUpdated['description']=$_POST["catDescr"];
+	 if(isset($_POST["parName"]))
+	    $toBeUpdated['name']=$_POST["parName"];
+     if(isset($_POST["parNumber"]))
+	    $toBeUpdated['number']=$_POST["parNumber"];
+	 //if(isset($_POST["catDescr"]))
+	 //   $toBeUpdated['description']=$_POST["catDescr"];
 	 
-	 if(isset($_POST["changePin"]))
+	 if(isset($_POST["changeFoto"]))
 	   {
-	    if($_FILES['catPin']['error']==0 && strstr($_FILES['catPin']['name'],".png"))
+	    if($_FILES['parFoto']['error']==0 && strstr($_FILES['parFoto']['name'],".png"))
 		  {
-		   move_uploaded_file($_FILES["catPin"]["tmp_name"],$_SERVER["DOCUMENT_ROOT"]."newSite/mappa/pin-images/".$id.".png");
-		   $toBeUpdated['pinPath']=/*$_SERVER["DOCUMENT_ROOT"]."newSite/mappa/*/"pin-images/".$id.".png";
+		   move_uploaded_file($_FILES["parFoto"]["tmp_name"],$_SERVER["DOCUMENT_ROOT"]."newSite/mappa/rect-images/".$id.".png");
+		   $toBeUpdated['fotoPath']=/*$_SERVER["DOCUMENT_ROOT"]."newSite/mappa/*/"rect-images/".$id.".png";
+		  }
+		else 
+		   $err++;
+	   }
+	   
+	 if(isset($_POST["changeFoto"]))
+	   {
+	    if($_FILES['parFoto']['error']==0 && strstr($_FILES['parFoto']['name'],".png"))
+		  {
+		   
 		  }
 		else 
 		   $err++;
