@@ -43,7 +43,7 @@ if($_SESSION['user']!='chief')
 
       // Change this depending on the name of your PHP file
       	
-      downloadUrl("backendCityMapController.php?prova=2", function(data) {
+      downloadUrl("backendCityMapController.php", function(data) {
         var xml = data.responseXML;
         var markers = xml.documentElement.getElementsByTagName("marker");
         for (var i = 0; i < markers.length; i++) {

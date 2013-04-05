@@ -38,37 +38,38 @@ if (!$result) {
 header("Content-type: text/xml");
 
 // Iterate through the rows, adding XML nodes for each
-while ($row = @mysql_fetch_assoc($result))
-{	
-  $newChild = $root->appendChild($xmlDoc->createElement("marker"));	
-  
-  $tableFields=array();
-  $tableFields[]="name";
-  $tableFields[]="address";
-  $tableFields[]="lat";
-  $tableFields[]="lng";
-  $tableFields[]="category_exkey";
-  $tableFields[]="pinPath";
+$tableFields=array();
+$tableFields[]="name";
+$tableFields[]="address";
+$tableFields[]="lat";
+$tableFields[]="lng";
+$tableFields[]="category_exkey";
+$tableFields[]="pinPath";
  
-  
-  for($i=0; $i<sizeof($tableFields); $i++)
-     $newChild->appendChild($xmlDoc->createAttribute($tableFields[$i]))->appendChild($xmlDoc->createTextNode($row[$tableFields[$i]]));
-  
-  
- /* 
-  // ADD TO XML DOCUMENT NODE
-  $node = $doc->create_element("marker");
-  $newnode = $parnode->append_child($node);
 
-  $newnode->set_attribute("name", $row['name']);
-  $newnode->set_attribute("address", $row['address']);
-  $newnode->set_attribute("lat", $row['lat']);
-  $newnode->set_attribute("lng", $row['lng']);
-  $newnode->set_attribute("type", $row['type']);*/
+$idCat=-1;
+if(is_numeric($_GET["idCat"])&&($_GET["idCat"]>0))
+   $idCat=$_GET["idCat"];
+while ($row = @mysql_fetch_assoc($result))
+{
+  if($idCat!=-1)
+    {
+     if($idCat==$row["category_exkey"])		
+	   {
+	   	$newChild = $root->appendChild($xmlDoc->createElement("marker"));	
+     	for($i=0; $i<sizeof($tableFields); $i++)
+            $newChild->appendChild($xmlDoc->createAttribute($tableFields[$i]))->appendChild($xmlDoc->createTextNode($row[$tableFields[$i]]));
+	   }
+    }	
+  else 
+    {
+     $newChild = $root->appendChild($xmlDoc->createElement("marker"));	
+     for($i=0; $i<sizeof($tableFields); $i++)
+         $newChild->appendChild($xmlDoc->createAttribute($tableFields[$i]))->appendChild($xmlDoc->createTextNode($row[$tableFields[$i]]));      
+    }
 }
 
-if(is_numeric($_GET["prova"])&&($_GET["prova"]>0))
-   ;
+
 
 mysql_close($connection);
 echo $xmlDoc->saveXML();

@@ -3,6 +3,8 @@
 session_start();
 if($_SESSION['user']!='chief')
   header('location:../login.php');*/
+  
+ 
 
 
 ?>
@@ -12,6 +14,9 @@ if($_SESSION['user']!='chief')
 	<head>
 		<title>Bulsara</title>
 		<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+		<meta http-equiv='cache-control' content='no-cache'>
+ 	    <meta http-equiv='expires' content='0'>
+ 	    <meta http-equiv='pragma' content='no-cache'>
 		<!--<script type="text/javascript" src="jscolor/jscolor.js"></script>-->
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
@@ -32,7 +37,7 @@ if($_SESSION['user']!='chief')
       }
     };
 
-    function load() {
+    function load(idCat) {
      
       var map = new google.maps.Map(document.getElementById("map"), {
         center: new google.maps.LatLng(47.6145, -122.3418),
@@ -43,7 +48,7 @@ if($_SESSION['user']!='chief')
 
       // Change this depending on the name of your PHP file
       	
-      downloadUrl("backendCityMapController.php", function(data) {
+      downloadUrl("backendCityMapController.php?idCat="+idCat, function(data) {
         var xml = data.responseXML;
         var markers = xml.documentElement.getElementsByTagName("marker");
         for (var i = 0; i < markers.length; i++) {
@@ -230,7 +235,7 @@ if($_SESSION['user']!='chief')
 		          
 		$(document).ready(function() 
 				{
-				 load();
+				 load(-1);
 				 
 				 actualCatSelected=-1;
 				});
@@ -238,9 +243,13 @@ if($_SESSION['user']!='chief')
 		</head>
 	<body>
 	 <?php
-	
+	   error_reporting(E_ERROR | E_PARSE);
 	   require("markerModel.php");
-	  
+	  header("Pragma-directive: no-cache");
+  header("Cache-directive: no-cache");
+  header("Cache-control: no-cache");
+  header("Pragma: no-cache");
+  header("Expires: 0");
 	   
 	   if(is_numeric($_GET["err"])&&($_GET["err"]>0))
 	      echo '<center>Modifica non avvenuta: immagine caricata non PNG</center><br><br>';
@@ -261,7 +270,7 @@ if($_SESSION['user']!='chief')
 		              echo '<div id="num'.$k.'" style="display: none;">'.$v['number'].'</div>'
 		     ?>
 		     
-	   	    <select id="listaCategorie" name="categoryList" id="category" size="8" onchange="enableForm();">
+	   	    <select id="listaCategorie" name="categoryList" id="category" size="8" onchange="enableForm(); load($(this).val());">
 		   	 
 		   	  <?php
 		   	  
