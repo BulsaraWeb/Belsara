@@ -1,0 +1,292 @@
+
+
+body {
+	margin:0px 0px; padding:0px;
+	
+	}
+	
+#container {
+	
+
+	
+	background-color:white;
+	}
+	
+
+#logo 	
+	{
+		margin-left:50%;
+		margin-right:50%;
+		margin-bottom:-30px;
+	}
+
+#menu_header
+	{
+	 top:0px;
+	 position: fixed;
+	 text-align:center;
+	 background-color:white;
+	 height:160px  !important;
+	 width:100%;
+	 left:0px;
+	 z-index: 19;	
+	
+     }
+	
+#gallery
+	{
+	 position:fixed;
+	 background:url("sfondo.png");
+	 margin-top:212px;
+	 height:400px; 
+	 width:980px;	
+	overflow: hidden;
+	
+
+	
+	}
+	
+	
+#tweet	
+	{
+		width:50px;
+		height:50px;
+		float:left;
+		position:relative;
+		margin-top:-60px;
+		z-index: 10;
+		margin-left:88%;
+		background-image: url('contatti/pulsante-tw-grigio.png');
+	}
+	
+	#tweet:hover	
+	{
+		background-image: url('contatti/pulsante-tw-rosso.png');
+	}
+#face
+	{
+		
+		margin-top:-60px;
+		width:50px;
+		height:50px;
+		float:left;
+		position:relative;
+		z-index: 10;
+		margin-left:83%;
+		background-image: url('contatti/pulsante-fb-grigio.png');
+
+	}
+	#face:hover	
+	{
+		background-image: url('contatti/pulsante-fb-rosso.png');
+	
+	}
+	
+
+/*
+.fancybox-next span 
+{
+  left: auto;
+  right: 20px;
+ }
+.fancybox-prev span 
+{
+  left: 20px;
+ }
+ .fancybox-nav span 
+ {
+   visibility: visible;
+}
+
+.fancybox-nav {
+    width: 60px;       
+}
+
+.fancybox-nav span {
+    visibility: visible;
+    opacity: 0.5;
+}
+
+.fancybox-nav:hover span {
+    opacity: 1;
+}
+
+.fancybox-next {
+    right: 20px;
+}
+
+.fancybox-prev {
+    left: 20px;
+}
+.fancybox-overlay 
+{
+	background:none;
+	
+}
+
+*/
+.thumbVetrina
+	{
+	
+	 float: left; 
+	 height:200px;
+	 width:250px; 		
+	 padding: 0;
+	}
+.thumbVetrina_big
+	{
+	 
+	
+	 float: left;
+	 left:500px; 
+	 height:200px;
+	 width:480px; 	
+	 padding: 0;
+	}
+.thumbVetrina_biggest
+	{
+	 top:200px;
+	
+	 float: left; 
+	 height:200px;
+	 width:730px; 	
+	 padding: 0;
+	}
+
+/* LUCATISCALINO da qua */ 
+	
+#supporti
+    {
+     margin-top:960px;
+    }	
+	
+#statistiche
+	{
+     z-index:2; 	
+	 font-size: 100%;
+	 vertical-align:center;
+	 position: absolute;
+	 width:980px;
+	 height:1100px;
+	 background-image: url('servizi_back_3.png');
+	 background-repeat: repeat-y;
+	}
+	
+.statContainer
+    {
+     margin-left: 0px;
+     margin-top:130px;
+     display: inline-block;
+     width: 200px;
+     line-height: 45px;
+     text-align: center; 
+    }	
+	
+.stat
+    {
+     font-family:'cabin-regular';
+	 text-shadow: 0 0 5px rgba(0,0,0,0.5);    
+    }
+
+/* LUCATISCALINO a qua */
+
+    #footer
+    {
+    	left:auto;
+    	margin-top:0px;
+    	
+    	  z-index:-1;
+    	
+    	
+    }
+    .biglietto
+    {
+    left:0;
+   	margin-left:-50%;
+   	position:relative;	
+   	z-index: 10;
+    	
+    }
+    .ui-dialog-titlebar-close
+     {
+  		visibility: hidden;
+	 }
+
+
+
+
+.file-input {
+    cursor: pointer;
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    float:left;
+    z-index:10;
+    font-family:Helvetica, Arial, serif;
+}
+.file-input input {
+    text-transform:capitalize;
+    cursor: pointer;
+    font-size: 100px;
+    height: 100%;
+    filter: alpha(opacity=1);
+    -moz-opacity: 0.01;
+    opacity: 0.01;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index:20;
+    outline:none;
+}
+.file-input .btn{
+    background: #79130e;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 4px 18px;
+    text-transform: uppercase;
+    color:#fff;
+    float:left;
+}
+.file-input .file-holder{
+    margin-top:4px;
+    display: block;
+    float: left;
+    margin-left:4px;
+    font-size:11px
+}
+
+
+.btn{
+    background: #79130e;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 4px 18px;
+    text-transform: uppercase;
+    color:#fff;
+    float:left;
+}
+.btn_all{
+    background: #79130e;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 4px 18px;
+    text-transform: uppercase;
+    color:#fff;
+    
+}
+
