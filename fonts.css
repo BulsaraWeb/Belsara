@@ -1,0 +1,57 @@
+
+		
+@font-face
+	{
+		font-family: cabin-regular;
+		src: url('fonts/Cabin-Regular.ttf');
+	}
+	
+@font-face
+	{
+		font-family: cardo-bold;
+		src: url('fonts/Cardo-Bold.ttf');
+	}
+
+@font-face
+	{
+		font-family: cardo-italic;
+		src: url('fonts/Cardo-Italic.ttf');
+	}
+
+@font-face
+	{
+		font-family: cardo-regular;
+		src: url('fonts/Cardo-Regular.ttf');
+	}
+	
+@font-face
+	{
+		font-family: oleoscript-regular;
+		src: url('fonts/OleoScript-Regular.ttf');
+	}
+	
+@font-face
+	{
+		font-family: oleoscript-bold;
+		src: url('fonts/OleoScript-Bold.ttf');
+	}
+@font-face
+	{
+		font-family: rosario-bold;
+		src: url('fonts/Rosario-Bold.ttf');
+	}
+@font-face
+	{
+		font-family: rosario-bolditalic;
+		src: url('fonts/Rosario-BoldItalic.ttf');
+	}
+@font-face
+	{
+		font-family: rosario-italic;
+		src: url('fonts/Rosario-Italic.ttf');
+	}
+@font-face
+	{
+		font-family: rosario-regular;
+		src: url('fonts/Rosario-Regular.ttf');
+	}

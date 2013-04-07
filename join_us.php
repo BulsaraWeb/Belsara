@@ -12,13 +12,14 @@
 		<?php session_start(); 
 		if($_SESSION["user"]=="chief") //if($_GET["id"]== hash('sha256',"ok")){ $_SESSION["user"]="chief";
    			{
+   				//phpinfo();
    				
 			?>
 	<div align="center">		
 		<form action="open_position_save.php" method="post" >
 			<br> <a href="">Gestione Partner</a> 
 			<br>
-			<a href="indexLuca.html"> Index</a>
+			<a href="indexLuca.php"> Index</a>
 			<br>
 			<a href="backend.php">Gestione Galleria</a>
 			<br>

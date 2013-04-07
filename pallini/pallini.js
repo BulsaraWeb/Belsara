@@ -1,6 +1,6 @@
 $(document).ready(function() 
 				{
-				 for(var i=0; i<60; i++)
+				 for(var i=0; i<90; i++)
 					 $('#pallini').append('<img class="unpallino" src="pallini/pallino-grigio.png"/>');
 			    });
 
@@ -9,7 +9,7 @@ $(window).on("scroll", function(){
 	                              var prop=$(window).scrollTop()/$(window).height();
 								  $('.unpallino').each(function(index) 
 												               {
-														        if(index<prop*60)
+														        if(index<prop*12.4)
 														           $(this).attr("src", "pallini/pallino-rosso.png");	
 														        else
 														       	   $(this).attr("src", "pallini/pallino-grigio.png");

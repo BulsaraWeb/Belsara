@@ -7,6 +7,30 @@
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		<script src="jquery-1.9.1.min.js"></script>
 		<script src="jquery.mousewheel.js"></script>
+		<script type="text/javascript" src="gallery/lib/jquery.mousewheel-3.0.6.pack.js"></script>
+		<script src="pallini/pallini.js"></script>
+		<script src="statistiche/statistiche.js"></script>
+
+		<script type="text/javascript" src="js/biglietto.js"></script>
+		<!-- <script type="text/javascript" src="js/gallery.js"></script> -->
+		<script type="text/javascript" src="js/header.js"></script>
+		<script type="text/javascript" src="js/logo.js"></script>
+
+		<!-- Add fancyBox main JS and CSS files -->
+		<script type="text/javascript" src="gallery/source/jquery.fancybox.js?v=2.1.4"></script>
+		<link rel="stylesheet" type="text/css" href="gallery/source/jquery.fancybox.css?v=2.1.4" media="screen" />
+
+		<!-- Add Button helper (this is optional) -->
+		<link rel="stylesheet" type="text/css" href="gallery/source/helpers/jquery.fancybox-buttons.css?v=1.0.5" />
+		<script type="text/javascript" src="gallery/source/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
+
+		<!-- Add Thumbnail helper (this is optional) -->
+		<link rel="stylesheet" type="text/css" href="gallery/source/helpers/jquery.fancybox-thumbs.css?v=1.0.7" />
+		<script type="text/javascript" src="gallery/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
+
+		<!-- Add Media helper (this is optional) -->
+		<script type="text/javascript" src="gallery/source/helpers/jquery.fancybox-media.js?v=1.0.5"></script>
+
 		<script>
 			jQuery(function($) {
 
@@ -20,7 +44,6 @@
 				//calcolo la larghezza dello schermo
 
 				var scrWidth = $(document).width();
-
 				var scrHeight = $(document).height();
 				var w = $(document).width() / 4;
 				var top = -12;
@@ -30,7 +53,7 @@
 				var winit, wend, tinit, tend, hinit, hend, linit, lend, binit, bend, rinit, rend;
 				var offset_header = 100;
 
-				var context = document.getElementById('myCanvas').getContext('2d');
+				// var context = document.getElementById('myCanvas').getContext('2d');
 
 				jQuery.get('posizione_aperta.txt', function(data) {
 					$('#posizione_aperta').html('Posizione Aperta:' + data);
@@ -47,6 +70,15 @@
 					}
 
 				});
+				
+				jQuery.get('gallery_title.txt', function(data) {
+					if (data.replace(" ", "") != "") {
+						
+						$("#gallery_title").html( data);
+
+					}
+
+				});
 
 				if (scrWidth > 980) {
 					//calcolo quanto spazio serve per centrare la schermata
@@ -54,6 +86,10 @@
 					var my_right = (scrWidth - 980) / 2;
 					$("#container").css("margin-left", my_left).css("margin-right", my_right);
 
+					// if (scrHeight / 8 > 100) {
+						// $("#menu_header").css("height", scrHeight / 8);
+
+					//}
 				}
 
 				$("#who_we_are").click(function() {
@@ -68,7 +104,7 @@
 				});
 				$("#support").click(function() {
 					$('html, body').animate({
-						scrollTop : $('#supporto').position().top - offset_header
+						scrollTop : $('#servizi').position().top+1200 - offset_header
 					}, 'slow');
 				});
 				$("#partner").click(function() {
@@ -81,9 +117,13 @@
 						scrollTop : $('#unisciti').position().top + offset_header
 					}, 'slow');
 				});
-				$("#home").click(function() {
-					$('html, body').scrollTo($('#container'), 5000);
+				$("logo_link").click(function()
+				{		$('html, body').animate({
+						scrollTop : $('#container').position().top + offset_header
+					}, 'slow');
+			
 				});
+				
 
 				var zommed = false;
 				var top;
@@ -97,130 +137,298 @@
 				var count = 0;
 				var now = new Date;
 				var clicks;
-				$("#gallery").delegate(".thumbVetrina", "click", function(e)
+				var id_animating = sessionStorage.getItem('animating');
+
+				// $("#"+id_animating).unbind("click",false);
+				//
 				
-				   {
-					//wait=setTimeout(function(){$(this).unbind("click");},2000);
-					var now = new Date();
-					//
-					sessionStorage.setItem('elapsed_time', JSON.stringify(now.getSeconds()));
-                
-					var elapsed_time = sessionStorage.getItem('elapsed_time');
-                    var zoom_time;
-                     wait= now.getSeconds();
-					clicks = ($(this).data('clicks') || 0) + 1;
-					$(this).data('clicks', clicks);
+				fheight=$(".fancybox-skin").height();
+				var my_top = (fheight - 500) / 2;
+				var my_buttom = (fheight - 500) / 2;
+					$("#fancybox-skin").css("top", my_top+200).css("margin-bottom", my_buttom-200);
 
-					var thumb;
 
-					var id = $(this).attr("id");
+				$(".fancybox").fancybox({
 
-					// && (old+500==$.now())
-
-					if (!zommed)
-					 {
-					 	var secondsSinceEpoch = ($.now() / 1000) | 0;
-						var secondsInDay = ((secondsSinceEpoch % 86400) + 86400) % 86400;
-						var seconds = secondsInDay % 60;
 					
-					   // alert(seconds+' '+wait);
-					
-					 	(formatTimeOfDay($.now()));
+					openEffect : 'elastic',
+					transitionIn:'elastic',
+					transitionOut:'elastic',
+					openSpeed : 250,
+
+					closeEffect : 'elastic',
+					closeSpeed : 250,
+
+					closeClick : true,
+
+					closeBtn : true,
+
+					loop : true,
+
+					arrows : true,
+					opacity:true,
+
+					helpers : {
+						overlay : {
+
+										    locked : false,
+
+								 },
+								 
+						 beforeLoad : function() {
+						 						for(var i=0; i<8; i++)
+										       if( $(this).attr("id").indexOf(i)>0)
+										         this.title= $("#title_gallery");
+												this.title="";
+												
+												
+												   },
+												    
+						afterLoad: function() {
+							
+							
+												$(".fancybox-wrap").css("top" ,$("#gallery").position().top+"!important" );
+							
+											  }
 						
-						var w = 245;
-						var h = 200;
-						thumb = $(this);
-
-						for (var i = 0; i < 8; i++)//toglie il click a tutti
-							$("#vetrina" + i).unbind("click", false).fadeOut(100);
-
-						for (var i = 0; i < 8; i++)
-
-						//cancello tuttle le thumb tranne la mia che ingrandirò
-
-							if ($("#vetrina" + i).attr("id") != id)
-
-								$("#vetrina" + i).unbind("click", false);
-							else//se è la mia
-							{
-								var marg = 0;
-								if (i > 3)
-									marg = 200;
-
-								$("#vetrina" + i).fadeIn(50).animate({
-									"width" : 980,
-									"height" : 500
-								}, 100);
-
-							}
-
-						zommed = true;
-						// 	$(this).unbind("click");
-						//$("#" + id).bind("click");
-					} else if ((clicks % 2) == 0)// se l'immagine è ingrandita
-					{
-						//	alert(formatTimeOfDay($.now()));
-						//	alert("dd");
-						//	$(this).unbind("click");
-						//alert(clicks);
-
-						$("#" + id).unbind("click", false);
-
-						for (var j = 0; j < 8; j++)
-							$("#vetrina" + j).fadeOut(10);
-
-						var w = 245;
-						var h = 200;
-
-						var big_image = $(this);
-						var m = 0;
-						var i = id.replace("vetrina", "");
-						if (i > 3)
-							m = 200;
-						//rimpicciolisco l'immagine
-
-						$("#vetrina" + i).fadeIn(50).animate({
-							"width" : w,
-							"height" : h
-						}, 50);
-
-						for (var j = 7; j >= 0; j--)
-
-							$("#vetrina" + j).fadeIn(500);
-
-						zommed = false;
-
-					}
-
+								
+							}	
+								
 				});
-				//click vetrina any
+				/*----------------------ANIMAZIONE CAMBIO FOTO------------------
+						(function ($, F) {
+    
+								    // Opening animation - fly from the top
+								    F.transitions.dropIn = function() 
+								    {
+								        var endPos = F._getPosition(true);
+								
+								        endPos.top = (parseInt(endPos.top, 10) - 200) + 'px';
+								        endPos.opacity = 0;
+								        
+								        F.wrap.css(endPos).show().animate({
+								            top: '+=200px',
+								            opacity: 1
+								        }, {
+								            duration: F.current.openSpeed,
+								            complete: F._afterZoomIn
+								        });
+								    };
+								
+								    // Closing animation - fly to the top
+								    F.transitions.dropOut = function() 
+								    {
+								        F.wrap.removeClass('fancybox-opened').animate({
+								            top: '-=200px',
+								            opacity: 0
+								        }, {
+								            duration: F.current.closeSpeed,
+								            complete: F._afterZoomOut
+								        });
+								    };
+								    
+								    // Next gallery item - fly from left side to the center
+								    F.transitions.slideIn = function()
+								     {
+								        var endPos = F._getPosition(true);
+								
+								        endPos.left = (parseInt(endPos.left, 10) - 200) + 'px';
+								        endPos.opacity = 0;
+								        
+								        F.wrap.css(endPos).show().animate({
+								            left: '+=200px',
+								            opacity: 1
+								        }, {
+								            duration: F.current.nextSpeed,
+								            complete: F._afterZoomIn
+								        });
+								    };
+								    
+								    // Current gallery item - fly from center to the right
+								    F.transitions.slideOut = function() 
+								    {
+								        F.wrap.removeClass('fancybox-opened').animate({
+								            left: '+=200px',
+								            opacity: 0
+								        }, {
+								            duration: F.current.prevSpeed,
+								            complete: function () {
+								                $(this).trigger('onReset').remove();
+								            }
+								        });
+								    };
+								
+								}(jQuery, jQuery.fancybox));
+								
+								$(".fancybox")
+								    .attr('rel', 'gallery')
+								    .fancybox({
+								        openMethod : 'dropIn',
+								        openSpeed : 250,
+								
+								        closeMethod : 'dropOut',
+								        closeSpeed : 150,
+								        
+								        nextMethod : 'slideIn',
+								        nextSpeed : 250,
+								        
+								        prevMethod : 'slideOut',
+								        prevSpeed : 250
+								  });
 
+
+*/    //----------------------ANIMAZIONE CAMBIO FOTO------------------
+				/*
+				 $("#gallery").delegate(".thumbVetrina", "click", function(e)
+
+				 {
+
+				 if($(this).attr("id")==id_animating)
+				 alert("wer");
+
+				 //wait=setTimeout(function(){$(this).unbind("click");},2000);
+				 var now = new Date();
+				 //
+				 sessionStorage.setItem('animating', JSON.stringify($(this).attr('id')));
+
+				 var elapsed_time = sessionStorage.getItem('elapsed_time');
+				 var zoom_time;
+				 wait= now.getSeconds();
+				 clicks = ($(this).data('clicks') || 0) + 1;
+				 $(this).data('clicks', clicks);
+
+				 var thumb;
+
+				 var id = $(this).attr("id");
+
+				 // && (old+500==$.now())
+
+				 if (!zommed)
+				 {
+
+				 var w = 245;
+				 var h = 200;
+				 thumb = $(this);
+
+				 for (var i = 0; i < 8; i++)//toglie il click a tutti
+				 $("#vetrina" + i).fadeOut(100);
+
+				 for (var i = 0; i < 8; i++)
+
+				 //cancello tuttle le thumb tranne la mia che ingrandirò
+
+				 if ($("#vetrina" + i).attr("id") != id)
+				 ;
+
+				 else//se è la mia
+				 {
+				 var marg = 0;
+				 if (i > 3)
+				 marg = 200;
+
+				 $("#vetrina" + i).fadeIn(50).animate({
+				 "width" : 980,
+				 "height" : 500
+				 }, 100);
+
+				 }
+
+				 zommed = true;
+				 // 	$(this).unbind("click");
+				 //$("#" + id).bind("click");
+				 } else if ((clicks % 2) == 0)// se l'immagine è ingrandita
+				 {
+				 //	alert(formatTimeOfDay($.now()));
+				 //	alert("dd");
+				 //	$(this).unbind("click");
+				 //alert(clicks);
+
+				 $("#" + id).unbind("click", false);
+
+				 for (var j = 0; j < 8; j++)
+				 $("#vetrina" + j).fadeOut(10);
+
+				 var w = 245;
+				 var h = 200;
+
+				 var big_image = $(this);
+				 var m = 0;
+				 var i = id.replace("vetrina", "");
+				 if (i > 3)
+				 m = 200;
+				 //rimpicciolisco l'immagine
+
+				 $("#vetrina" + i).fadeIn(50).animate({
+				 "width" : w,
+				 "height" : h
+				 }, 50);
+
+				 for (var j = 7; j >= 0; j--)
+
+				 $("#vetrina" + j).fadeIn(500);
+
+				 zommed = false;
+
+				 }
+
+				 });
+				 //click vetrina any
+				 */
 				var startingHeight = $("#gallery").height();
 				var lastScrollTop = 0;
-
-				$('#container').bind('mousewheel', function(event, delta) {
-					var dir = delta > 0 ? 'Up' : 'Down', vel = Math.abs(delta);
-
-					// return false;
-				});
+				//
+				// $('#container').bind('mousewheel', function(event, delta) {
+				// var dir = delta > 0 ? 'Up' : 'Down', vel = Math.abs(delta);
+				// if(dir=='Up'&&$(window).scrollTop()<100)
+				// {
+				// alert("asda");
+				// $("#logo").fadeOut(200).attr("src","logo_completo.png").fadeIn(500);
+				//
+				// }
+				// return false;
+				//});
+				var flag_down = false;
+				var flag_up = true;
+				var startingHeight = $("#gallery").height();
 				$(window).on("scroll", function() {//sto scrollando la finestra
-
-					for (var i = 0; i < 60; i++) {
-						context.beginPath();
-						context.arc(10 + i * 20, 10, 5, 0, 2 * Math.PI, false);
-						context.fillStyle = 'gray';
-						context.fill();
-					}
-
-					var prop = $(window).scrollTop() / $(window).height();
-					for (var i = 0; i < prop * 60; i++) {
-						context.beginPath();
-						context.arc(10 + i * 20, 10, 5, 0, 2 * Math.PI, false);
-						context.fillStyle = 'red';
-						context.fill();
-					}
-
+					
 					$("#gallery").css("height", startingHeight - $(window).scrollTop());
+					
+					// if ($(window).scrollTop() > 0 && $(window).scrollTop() > 300 && !flag_down) 
+					// {
+						// flag_up = false;
+						// $("#logo").attr("src", "images/logo.png");
+						// $("#menu_header").css("height","-=60px");
+						// //$("#menu_header").fadeOut(200).fadeIn(200);
+// 
+						// flag_down = true;
+					// }
+// 
+					// if ($(window).scrollTop() < 299 && !flag_up) {
+						// flag_down = false;
+						// $("#logo").attr("src", "images/logo_completo.png");
+// 						
+						// $("#menu_header").css("height","+=60px");
+						// //$("#menu_header").fadeOut(200).fadeIn(200);
+// 
+						// flag_up = true;
+					// }
+// 
+					// for (var i = 0; i < 60; i++) {
+						// context.beginPath();
+						// context.arc(10 + i * 20, 10, 5, 0, 2 * Math.PI, false);
+						// context.fillStyle = 'gray';
+						// context.fill();
+					// }
+
+					// var prop = $(window).scrollTop() / $(window).height();
+					// for (var i = 0; i < prop * 60; i++) {
+						// context.beginPath();
+						// context.arc(10 + i * 20, 10, 5, 0, 2 * Math.PI, false);
+						// context.fillStyle = 'red';
+						// context.fill();
+					// }
+					$.fancybox.close();
 					statTop = $("#gallery").position().top + (startingHeight - $(window).scrollTop()) + $("#menu_header").height();
 					$("#div_stat").css("top", statTop);
 
@@ -234,34 +442,18 @@
 					});
 
 					//------------------------------------------------ANIMAZIONE BIGLIETTO.--------------------------------
-
-					if ($("#biglietto").position().top >= ($(window).scrollTop() + 100) && $("#biglietto").position().top <= ($(window).scrollTop() + 800)) {
-
-						$(".footer").animate({
-							'margin-top' : '-370px'
-						}, {
-							duration : 1000,
-
-							complete : function() {
-
-								//$("#biglietto").css("-moz-transition-delay","0s, 0s, 0s");
-								$("#biglietto").css("-webkit-transform", "rotate(5deg)");
-								$("#biglietto").css("-moz-transform", "rotate(5deg)");
-								$("#biglietto").css("-o-transform", "rotate(5deg)");
-								$("#biglietto").css("-ms-transform", "rotate(5deg)");
-								$("#biglietto").css("transform", "rotate(5deg)");
-								//$("#biglietto").css("transform", "rotateX(4.6deg)");
-
-							}
-						});
+					//	$("#biglietto").hide();
+					//	$("#biglietto").css("margin-bottom","400px");
+			
 						//$(".footer").animate({'margin-left':'100px'},400);
 						//$("#biglietto").hide("drop",{direction:"up"},200).show("drop",{direction:"up"},200);
-
-					}
+					
 
 				});
 				// on scroll
 
+
+				
 				function formatTimeOfDay(millisSinceEpoch) {
 					var secondsSinceEpoch = (millisSinceEpoch / 1000) | 0;
 					var secondsInDay = ((secondsSinceEpoch % 86400) + 86400) % 86400;
@@ -278,33 +470,33 @@
 	</head>
 	<body>
 
-		<div id="menu_header" >
-			<a id="casa" href="#"> Home</a><a id="who_we_are" href="#"> Chi Siamo</a><a id="services" href="#"> Servizi</a><a href="#" id="support"> Supporti</a><a href="#" id="partner"> Partner</a><a href="#" id="join_us"> Join us</a><a href="#" id="contact"> Contact</a><a href="login.php"> Login</a>
+			<div id="menu_header" >
+
+			<a id="logo_link"> <img src="images/logo_completo.png" id="logo" /> </a>
+			<br>
+
+			<a id="who_we_are" > <img src="images/chi_siamo.png"/> </a>
+			<a id="services" > <img src="images/servizi.png"/></a>
+			<a  id="support" > <img src="images/supporti.png"/></a>
+			<a  id="partner"><img src="images/partner.png"/></a>
+			<a  id="join_us" > <img src="images/join_us.png"/></a>
+			<a  id="contact" > <img src="images/contatti.png"/></a>
+			<a href="login.php"> <img width="50px" height="50px" src="images/login.png"/></a>
 			<!--<?php if($_SESSION["user"]!="")echo "<a href='login.php'>Login</a>";?>-->
-			<br>
-			<canvas id="myCanvas" width="980" height="40"></canvas>
+
+			<div id="pallini" width="980" height="40"></div>
+
 		</div>
-		<div id="container"   style=" text-align:center" >
-			<!--<div id="lente" style="width:200px;height:200px;background-color:#b0c4de;"></div>-->
-			<div id="gallery">
-				<div id="div_vetrina0"><img id="vetrina0" class="thumbVetrina" src="gallery1.jpg"/>
-				</div>
-				<div id="div_vetrina1"><img id="vetrina1" class="thumbVetrina" src="gallery2.jpg"/>
-				</div>
-				<div id="div_vetrina2"><img id="vetrina2" class="thumbVetrina" src="gallery3.jpg"/>
-				</div>
-				<div id="div_vetrina3"><img id="vetrina3" class="thumbVetrina" src="gallery4.jpg"/>
-				</div>
-				<div id="div_vetrina4"><img id="vetrina4" class="thumbVetrina" src="gallery5.jpg"/>
-				</div>
-				<div id="div_vetrina5"><img id="vetrina5" class="thumbVetrina" src="gallery6.jpg"/>
-				</div>
-				<div id="div_vetrina6"><img id="vetrina6" class="thumbVetrina" src="gallery7.jpg"/>
-				</div>
-				<div id="div_vetrina7"><img id="vetrina7" class="thumbVetrina" src="gallery8.jpg"/>
-				</div>
-
-			</div>
+		<div id="container"  align="center" >
+				<div id="gallery">
+					<a  class=" fancybox" rel="gallery" href="backend_images/gallery0.jpg"><img id="vetrina1" class="thumbVetrina" src="backend_images/galleryThumb0.jpg"/></a>
+					<a title=""  class=" fancybox" rel="gallery" href="backend_images/gallery1.jpg"><img id="vetrina2" class="thumbVetrina"  src="backend_images/galleryThumb1.jpg"/></a>
+					<a title="" class=" fancybox"  rel="gallery" href="backend_images/gallery2.jpg"><img src="backend_images/galleryThumb2.jpg"class="thumbVetrina_big"   id="vetrina3"/></a>
+					<a title="" class=" fancybox"  rel="gallery" href="backend_images/gallery3.jpg"><img src="backend_images/galleryThumb3.jpg"class="thumbVetrina_biggest"  id="vetrina4"/></a>
+					<a title="" class=" fancybox"  rel="gallery" href="backend_images/gallery4.jpg"><img src="backend_images/galleryThumb4.jpg" class="thumbVetrina"  id="vetrina5"/></a>
+			
+				
+					</div>
 
 			<br>
 			<br>
@@ -343,18 +535,80 @@
 			<br>
 			<br>
 			<br>
-			<div id="chi_siamo">
-				<h2 align="center">CHI SIAMO</h2>
-				<p align="center" style="background-color:#C0C0C0;font-family:'Imprint MT Shadow'; font-size:33px">
-					Bulsara, dal termine inglese bull s eye, il centro del bersaglio,
+			<div id="chi_siamo" style="background-image: url('images/chi-siamo_back.png'); height: 1310px;">
+				<br>
+				<br>
+				<p>
+					<label align="left" style="font-family:'rosario-bold'; font-size:36px"> Bulsara </label>
+					<label align="left" style=" font-family:'rosario-regular'; font-size:18px"> ,dal termine inglese </label>
+
+					<label align="left" style=" font-family:'rosario-italic'; font-size:18px"> bull&#x2019;s eye </label>
+
+					<label align="left" style=" font-family:'rosario-regular'; font-size:18px"> , il centro del bersaglio, opera nel campo
+						<br>
+						della </label>
+					<label align="left" style=" font-family:'rosario-regular'; font-size:28px"> comunicazione non convenzionale </label>
+
+					<label align="left" style=" font-family:'rosario-regular'; font-size:18px"> ed &egrave; </label>
+					<label align="left" style=" font-family:'rosario-bold'; font-size:24px"> leader in Italia </label>
 					<br>
-					e una concessionaria Italia nel settore del Toilet Advertising,
-					<br>
-					la promozione pubblicitaria all interno dei servizi igienici.
-					<br>
+					<label align="left" style=" font-family:'rosario-regular'; font-size:18px"> nel </label>
+					<label align="left" style=" font-family:'rosario-bolditalic'; font-size:29px"> Washroom Advertising </label>
+					<label align="left" style=" font-family:'rosario-regular'; font-size:18px"> ,la pubblicit&agrave; all&#x2019;interno dei servizi igienici.
+						<br>
+						Attraverso l&#x2019;utilizzo di </label>
+					<label align="left" style=" font-family:'rosario-regular'; font-size:24px"> spazi insoliti indoor </label>
+					<label align="left" style=" font-family:'rosario-bold'; font-size:18px"> , Bulsara mira a colpire ed attrarre
+						<br>
+						il pubblico di riferimento con </label>
+					<label align="left" style=" font-family:'rosario-regular'; font-size:23px"> campagne coinvolgenti </label>
+					<label align="left" style=" font-family:'rosario-regualr'; font-size:18px"> e di </label>
+					<label align="left" style=" font-family:'rosario-regular'; font-size:23px"> grande impatto . </label>
 				</p>
 
 			</div>
+		
+
+			<div id="" style="margin-top: -300px; margin-left: 40px;" align="left">
+				
+				<label align="left" style=" font-family:'cardo-italic'; font-size:17px"> 
+				 Bando per l&#x2019;accesso al  </label><br>
+			    <label align="left" style=" font-family:'cardo-bold'; font-size:17px"> 
+				&#x201c;Fondo per la creativit&agrave; 2012&#x201d;.
+				</label>
+				 <br>
+				<label align="left" style=" font-family:'cardo-italic'; font-size:17px"> 
+				Ammissione al contributo relativo<br> al bando per l&#x2019;accesso al <br> &#x201c;Fondo per la creativit&agrave; 2012&#x201d;.
+
+				</label>	
+				</div>
+			
+			
+				<div style="margin-top: -80px; margin-left: 380px" align="left">
+				<label align="left" style=" font-family:'oleoScript-regular'; font-size:17px"> Per l&#x2019;evento &#x201c;Startuppers sotto il Sole:<br> 24 ore di creatività e innovazione&#x201d;.</label>
+				<br>
+				<br>
+				<label align="left" style=" font-family:'oleoScript-regular'; font-size:21px"> Premio per la creativit&agrave;<br> del Sole 24 ore. </label>
+				
+				</div>
+				
+				<div style="margin-top:-230px; margin-left: 700px" align="left">
+				<label align="left" style=" font-family:'cardo-italic'; font-size:14px"> &#x201c;I Giovani e il Lavoro 2012&#x201d; </label>
+				<br>
+				<label align="left" style=" font-family:'cardo-italic'; font-size:13px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XVI edizione
+				<br>
+				<label align="left" style=" font-family:'cardo-italic'; font-size:17px">	Premio &#x201c;All&#x2019;Azienda<br> preferita dai partecipanti per<br> presentazione, disponibilit&agrave;<br> e cortesia dello staff.  </label>
+				</div>
+		         <div align="center" style="margin-top: -240px; position: relative; z-index: 10">
+		         	
+		         	<img  id="cp" src="images/pulsante-cp_grigio.png" />
+		         	
+		         	<img id="dn" src="images/pulsante-dn_grigio.png"/>
+		         	
+		         <img id="ooo" src="images/pulsante-ooo_grigio.png"/>
+		         	
+		         </div>
+<br>
 			<br>
 			<br>
 			<br>
@@ -367,7 +621,33 @@
 			<br>
 			<br>
 			<br>
-			<div style="font-size: larger;" id="posizione_aperta"></div>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			 <div  id="servizi" style="background-image: url('images/servizi_screenshot.png'); height: 1200px"  >
+				
+			</div> 
+			<!---->
+		
+			
+			
+		
+			<div id="supporti" style="background-image: url('images/supporti_back.png'); height: 1550px;">
+			</div>
+			
+			<div id="map" style="width: 500px; height: 300px"></div>
+
+			<div  id="posizione_aperta" style="background-image: url('images/join_us_back.png'); height: 510px; font-size: larger;" ></div>
 			<br>
 			<br>
 			<br>
@@ -386,12 +666,21 @@
 			<br>
 			<br>
 
-		</div>
+			<br>
+			<br>
+			<br>
+			
+		
 		<div id="footer">
-			<img id="biglietto" src="biglietto.png" class="biglietto"/>
-			<img class="footer" src="footer.png" />
+			<img id="biglietto"  src="contatti/bv.png" class="biglietto"/>
+			<br>
+			<img  id="foo" src="contatti/contatti_back.png" />
 
+			<a href="http://twitter.com" id="tweet"> </a>
+
+			<a  id="face"> </a>
 		</div>
+</div>
 
 	</body>
 
